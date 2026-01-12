@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { playfair, saira } from "@/lib/fonts";
 import { AuthProvider } from "@/context/authContext";
+import { CartProvider } from "@/context/cartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${saira.variable} ${playfair.variable} antialiased`}
       >
-        <AuthProvider>  
-          <Header />
-          {children}
-          <Footer />
+        <AuthProvider>
+          <CartProvider>    
+            <Header />
+            {children}
+            <Footer />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

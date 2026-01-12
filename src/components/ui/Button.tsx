@@ -48,7 +48,6 @@ export default function Button({
       hover:text-white
     `,
     link: `
-      text-white
       hover:text-white
       underline-offset-4
       hover:underline

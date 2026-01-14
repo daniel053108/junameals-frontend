@@ -1,16 +1,34 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect} from "react";
+import { useAuth } from "./authContext";
 
 export type CartItem = {
-  id: string;
-  name: string;
-  price: number;
+  id: number;
   quantity: number;
-  image?: string;
+  price:number;
 };
 
+export type CartProduct = {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+    quantity: number;
+};
+
+export type Status = "active" | "paid" | "cancelled";
+
+export type Cart = {
+    id: number;
+    user_id:number;
+    status: Status;
+}
+
 type CartContextType = {
-  cart: CartItem[];
+  cart: Cart | null;
+  cantItems: number;
+  loadingCart: boolean;
+  getCartItems: () => Promise<CartProduct[]>;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
@@ -20,32 +38,163 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+    const [cart, setCart] = useState<Cart | null>(null);
+    const { user , isLogged } = useAuth();
+    const [ total, setTotal] = useState<number>(0);
+    const [ cantItems, setCantItems ] = useState(0);
+    const [loadingCart, setLoadingCart] = useState(true);
 
-  const addToCart = (item: CartItem) => {
-    setCart((prev) => {
-      const existing = prev.find((p) => p.id === item.id);
-      if (existing) {
-        return prev.map((p) =>
-          p.id === item.id ? { ...p, quantity: p.quantity + item.quantity } : p
+    {/*ReadCartAndUser*/}
+    useEffect(() => {
+        setLoadingCart(true);
+        if(!isLogged){
+            setCart(null);
+        }else{
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/cartStatus`, {
+                credentials: "include",
+            })
+            .then((res) => {return res.ok ? res.json() : null})
+            .then((data) =>{ 
+
+                if(!data || !user){
+                    return;
+                }
+                setCart({
+                    id: data.cart_id,
+                    user_id: user.id,
+                    status: data.status,
+                });
+            })
+            .finally(() =>{
+                setLoadingCart(false);
+            })
+            .catch(() => 
+                setCart(null)
+            )
+        }
+    }, [isLogged])
+
+    useEffect(() => {
+        if(!!cart && !!user){
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/getCartItems?cartId=${cart.id}&userId=${user.id}`,{
+                credentials: "include",
+            })
+            .then((res) => {return res.ok ? res.json() : null})
+            .then((data) => {
+                if(!data){
+                    setTotal(0);
+                    setCantItems(0);
+                    return;
+                }
+
+                const total = data.reduce((acc: number ,item: CartItem) => 
+                    acc + item.price * item.quantity, 0
+                );
+
+                const cant_items = data.reduce((acc:number, item: CartItem) => 
+                    acc + item.quantity, 0
+                );
+
+                setCantItems(cant_items);
+                setTotal(total);
+            })
+            .catch(() => {
+                setTotal(0);
+                setCantItems(0);
+            })
+        }else{
+            setCantItems(0);
+            setTotal(0);
+        }
+
+    },[cart, user]);
+
+    {/*getCartItems*/}
+    const getCartItems = async () => {
+        if(loadingCart) return;
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cart/getCartProducts?cartId=${cart?.id}`,{
+                credentials: "include"
+            }
         );
-      }
-      return [...prev, item];
-    });
-  };
 
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((p) => p.id !== id));
-  };
+        if(!res.ok)return[];
 
-  const clearCart = () => setCart([]);
+        return res.json();
+    }
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    {/*AddToCart*/}
+    const addToCart = async (item: CartItem) => {
 
-  return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, total }}>
-      {children}
-    </CartContext.Provider>
+        if (loadingCart) {
+            console.warn("Carrito aún cargando");
+            return;
+        }
+
+        if (!cart || !isLogged) {
+            console.warn("No hay carrito o usuario");
+            return;
+        }
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/addToCart`, {
+            method: "POST",
+            credentials: "include",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                product: item,
+                id_cart: cart.id
+            })
+        });
+
+        if(!res.ok){
+            const error = await res.json()
+            console.log(error.error);
+        };
+
+        const itemAdded = await res.json();
+
+        setTotal(prevTotal => prevTotal + Number(itemAdded.price));
+        setCantItems(prevCantItems => prevCantItems + 1);
+    };
+
+    {/*RemoveFromCart*/}
+    const removeFromCart = async (id: string) => {
+        if(!cart || !isLogged) return;
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/removeFromCart/cart/${cart.id}/item/${id}`,{
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        if(!res.ok)return;
+
+        const itemDelete:CartItem = await res.json();
+
+        setTotal(prevTotal => prevTotal - itemDelete.quantity * itemDelete.price);
+        setCantItems(prevCantItems => prevCantItems - itemDelete.quantity);
+    };
+
+    {/*clearCart*/}
+    const clearCart = async () => {
+        if(!cart || !isLogged)return;
+
+        await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cart/clearCart/cart/${cart.id}`,{
+                method: "DELETE",
+                credentials: "include"
+            }
+        );
+
+        setTotal(0);
+        setCantItems(0);
+
+    };
+
+
+    return (
+        <CartContext.Provider value={{ cart, loadingCart, cantItems, getCartItems, addToCart, removeFromCart, clearCart, total }}>
+            {children}
+        </CartContext.Provider>
   );
 }
 
@@ -66,47 +215,4 @@ export function AddToCartButton({ product }: { product: CartItem }) {
       Agregar al carrito
     </button>
   );
-}
-
-// Vista del carrito
-export function Cart() {
-  const { cart, removeFromCart, total, clearCart } = useCart();
-
-  if (cart.length === 0) {
-    return <p className="text-center text-gray-400">Tu carrito está vacío 🛒</p>;
-  }
-
-  return (
-    <div className="p-4 space-y-4">
-      {cart.map((item) => (
-        <div key={item.id} className="flex justify-between items-center border-b pb-2">
-          <div>
-            <p className="font-semibold">{item.name}</p>
-            <p className="text-sm text-gray-500">Cantidad: {item.quantity}</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <p>${item.price * item.quantity}</p>
-            <button
-              onClick={() => removeFromCart(item.id)}
-              className="text-red-500"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      ))}
-
-      <div className="flex justify-between font-bold text-lg">
-        <span>Total</span>
-        <span>${total}</span>
-      </div>
-
-      <button
-        onClick={clearCart}
-        className="w-full bg-red-500 text-white py-2 rounded-xl"
-      >
-        Vaciar carrito
-      </button>
-    </div>
-  );
-}
+};

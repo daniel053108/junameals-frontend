@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useContext, useEffect, useEffectEvent, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type User = {
     id: number;
     email: string;
+    id_cart: number;
 };
 
 type AuthContextType = {

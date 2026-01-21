@@ -30,7 +30,7 @@ type CartContextType = {
   loadingCart: boolean;
   getCartItems: () => Promise<CartProduct[]>;
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
+  removeFromCart: (id: number) => void;
   clearCart: () => void;
   total: number;
 };
@@ -153,25 +153,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
         const itemAdded = await res.json();
 
-        setTotal(prevTotal => prevTotal + Number(itemAdded.price));
+        setTotal(prevTotal => Math.round((prevTotal + Number(itemAdded.price))*10)/10);
         setCantItems(prevCantItems => prevCantItems + 1);
     };
 
     {/*RemoveFromCart*/}
-    const removeFromCart = async (id: string) => {
+    const removeFromCart = async (id: number) => {
         if(!cart || !isLogged) return;
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cart/removeFromCart/cart/${cart.id}/item/${id}`,{
             method: "DELETE",
             credentials: "include"
         });
-
         if(!res.ok)return;
 
         const itemDelete:CartItem = await res.json();
 
-        setTotal(prevTotal => prevTotal - itemDelete.quantity * itemDelete.price);
-        setCantItems(prevCantItems => prevCantItems - itemDelete.quantity);
+        setTotal(prevTotal => Math.round((prevTotal - itemDelete.price) * 10)/10);
+        setCantItems(prevCantItems => prevCantItems - 1);
     };
 
     {/*clearCart*/}
@@ -187,7 +186,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
         setTotal(0);
         setCantItems(0);
-
     };
 
 

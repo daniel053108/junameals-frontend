@@ -9,6 +9,7 @@ type product = {
 };
 
 async function getProducts(): Promise<product[]> {
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
     cache: "no-store",
   });

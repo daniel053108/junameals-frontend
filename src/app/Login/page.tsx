@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage(){
 
-    const { isLogged, setUser } = useAuth();
+    const { isLogged, setUserModifiqued } = useAuth();
     const router = useRouter();
 
     const [form, setForm] = useState({
@@ -49,7 +49,7 @@ export default function LoginPage(){
             setError( data.error || "Error al Iniciar Sesion");
             return;
         }else if(res.ok){
-            setUser(data.user);
+            setUserModifiqued(true);
         }
 
         setSucess(true);
@@ -81,7 +81,7 @@ export default function LoginPage(){
                 />            
 
                 <Button type="submit">Iniciar Sesion</Button>
-                <Button className="hover:underline underline-offset-5 font-saira font-bold hover:scale-105 transition-all" 
+                <Button variant="none" className="hover:underline underline-offset-5 font-saira font-bold hover:scale-105 transition-all" 
                         href="/Register" 
                 >Crear Cuenta</Button>
             </div>

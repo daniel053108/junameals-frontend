@@ -28,7 +28,7 @@ export default function Header(){
                     />
                 </a>
             </section>
-            <section className = {`absolute ${wButtons} top-10 left-1/2 transform -translate-x-1/2 bg-gray-300   rounded-xl shadow-lg opacity-90 text-xl flex items-center gap-0 hover:bg-gray-800 hover:text-white`}>
+            <section className = {`absolute ${wButtons} top-10 left-1/2 transform -translate-x-1/2 bg-gray-300 rounded-xl shadow-lg opacity-90 text-xl flex items-center gap-0 hover:bg-gray-800 hover:text-white`}>
                 <Button href = "/" variant="link" onClick={() => setOpen(false)}> Inicio </Button>
                 <section className="relative w-40">
                     <Button variant="link" onClick={() => setOpen(!open)} > Productos </Button>
@@ -43,7 +43,7 @@ export default function Header(){
                 {!isLogged && <Button variant="link" href="/Login" onClick={() => setOpen(false)}> Iniciar Sesion </Button>}
                 {isLogged && (
                     <>
-                        <Button variant="link" href="/me" onClick={() => setOpen(false)}>Mi Perfil</Button>
+                        <Button variant="link" href="/User/Me" onClick={() => setOpen(false)}>Mi Perfil</Button>
                         <Button variant="link" onClick={() => {
                             logout();
                             setOpen(false);
@@ -53,7 +53,7 @@ export default function Header(){
                 )}
             </section>
             <section className="absolute bg-gray-300 top-10 right-10 rounded-xl shadow-lg opacity-90 text-xl flex items-center gap-0 hover:bg-gray-800">
-                <Button variant="link" href="/User/Cart">
+                <Button variant="link" href="/User/Cart" onClick={() => setOpen(false)}>
                     <FaShoppingCart/>
                 </Button>
             </section>

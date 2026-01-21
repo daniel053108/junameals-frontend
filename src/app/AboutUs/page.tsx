@@ -1,5 +1,3 @@
-import { playfair } from "@/lib/fonts";
-
 export default function AboutUsPage(){
     const configImage = "w-40";
     return(

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-type Variant = "primary" | "secondary" | "outline" | "link" | "popover";
+type Variant = "primary" | "secondary" | "outline" | "link" | "popover" | "none";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ type ButtonProps = {
   type?: "button" | "submit" | "reset";
 };
 
-export default function Button({
+export default function  Button({
   children,
   className,
   variant = "primary",
@@ -22,15 +22,14 @@ export default function Button({
   type = "button",
 } : ButtonProps ) {
   const baseStyles = `
-    inline-flex items-center justify-center
     px-8 py-2
     font-semibold
     transition-all
-    active:scale-95
   `;
 
   const variants = {
     primary: `
+      inline-flex items-center justify-center
       bg-green-900 text-white
       hover:bg-green-500
       rounded-3xl
@@ -38,6 +37,7 @@ export default function Button({
       hover:scale-105
     `,
     secondary: `
+      inline-flex items-center justify-center
       bg-white text-black
       rounded-3xl
       border border-black
@@ -50,12 +50,14 @@ export default function Button({
       hover:text-white
     `,
     link: `
+      inline-flex items-center justify-center
       hover:text-white
       underline-offset-4
       hover:underline
       px-0 py-0
     `,
     popover:`
+      inline-flex items-center justify-center
       text-white
       underline-offset-4
       hover:underline
@@ -69,7 +71,7 @@ export default function Button({
       return(
         <Link
           href={href}
-          className={`${className}`}
+          className={`${baseStyles} ${variants[variant]} ${className} `}
           onClick={onClick}
         >
         {children}
@@ -92,7 +94,7 @@ export default function Button({
       <button
         type={type}
         onClick={onClick}
-        className={`${className}`}
+        className={`${baseStyles} ${className} ${variants[variant]}`}
       >
         {children}
       </button>  

@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --background: #B6B894;
+  --foreground: #2E6417;
+  --font-playfair: var(--font-playfair);
+  --font-saira: var(--font-saira);
+  --color2: #464B32;
+  --color3: #CBC7B7;
+  --color4: #EBE1BB;
+  --color5: #4C756D;
+
+}
+
+@layer utilities{
+  .font-playfair{
+    font-family: var(--font-playfair)
+  }
+
+  .font-saira{
+    font-family: var(--font-saira)
+  }
+
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--color5);
+  --color-text1: var(--color4);
+  --color-secondary: var(--color3);
+  --color-shadowGreen: var(--color2);
+}
+
+/*@media (prefers-color-scheme: dark) {
+  :root {
+  --background: #B6B894;
+  --foreground: #2E6417;
+  }
+}*/
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif, var(--font-playfair), var(--font-saira);
+}

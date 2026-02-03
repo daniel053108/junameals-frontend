@@ -77,7 +77,7 @@ export default function Header() {
 
             {/* Menú móvil */}
             {mobileMenu && (
-                <div className="absolute top-24 left-0 w-full bg-gray-800 text-white flex flex-col items-center z-50 gap-4 py-6 md:hidden shadow-xl">
+                <div className="absolute top-24 z-50 left-0 w-full bg-gray-800 text-white flex flex-col items-center z-50 gap-4 py-6 md:hidden shadow-xl">
                     <Button href="/" variant="link" onClick={() => setMobileMenu(false)}>Inicio</Button>
                     <Button href="/products/bowls" variant="link" onClick={() => setMobileMenu(false)}>Bowls</Button>
                     <Button href="/products/weekly-menu" variant="link" onClick={() => setMobileMenu(false)}>Menú Semanal</Button>

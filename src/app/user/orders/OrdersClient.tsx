@@ -23,7 +23,6 @@ export default function OrdersClient() {
         const send = async()=>{
             await sendOrderEmail("Pedido confirmado", "Gracias por tu compra", user.email);
         }
-        console.log("hola");
         send();
     },[loading,order,user]);
 

@@ -14,7 +14,7 @@ export default function SuccessClient() {
 
         // Pequeña pausa para que el webhook actualice
         const timeout = setTimeout(() => {
-            router.push(`user/orders?orderId=${orderId}`);
+            router.push(`/user/orders?orderId=${orderId}`);
         }, 1500);
 
         return () => clearTimeout(timeout);

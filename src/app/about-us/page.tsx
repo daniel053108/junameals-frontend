@@ -30,7 +30,7 @@ export default function AboutUsPage() {
             <div
                 className="
                     relative
-                    z-50
+                    z-25
                     flex
                     flex-col
                     md:flex-row

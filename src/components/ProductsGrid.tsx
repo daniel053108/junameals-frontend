@@ -24,7 +24,7 @@ export type product = {
 
 export default function ProductsGrid({ products }: { products: product[] }) {
     const { addToCart, setCartModifiqued } = useCart();
-    const { isLogged, loading, user} = useAuth();
+    const { isLogged, loading, user, addresses} = useAuth();
     const [ checkProductId, setCheckProductId ] = useState<number | null>(null);
     const { order, createOrder, statusCreateOrder, loadingOrder } = useCreateOrder();
     const [ messageBuyButton, setMessageBuyButton ] = useState<string>("");
@@ -152,7 +152,15 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                         )}
 
                         {isLogged ? (
-                            <Button key={product.id} variant="primary" onClick={() => createOrder([product])}>
+                            <Button 
+                                key={product.id} 
+                                variant="primary" 
+                                onClick={() => {
+                                    if(addresses.length === 0)
+                                        router.push("/user/update-user");
+                                    createOrder([product])
+                                }}
+                            >
                                 {messageBuyButton}
                             </Button>
                         ):(

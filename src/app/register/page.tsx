@@ -43,42 +43,45 @@ export default function RegisterPage(){
     }
 
     return(
-        <form  onSubmit = {handleSubmit} className="flex flex-col items-center h-140 w-full p-10">
-            <div className="flex flex-col gap-10 bg-secondary rounded-3xl w-100 p-20 items-center">
-                <p className="font-playfair scale-160 font-bold ">Crear Cuenta</p>
-                <input 
-                    className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"    
-                    type="text"
-                    name="user_name"
-                    value={form.user_name}
-                    onChange = {handleChange}
-                    placeholder="Nombre de Usuario"
-                    required
-                />
+        <section className="h-160">
+            <form  onSubmit = {handleSubmit} className="flex flex-col items-center h-140 w-full p-10">
+                <div className="flex flex-col gap-10 bg-secondary rounded-3xl w-100 p-20 items-center">
+                    <p className="font-playfair scale-160 font-bold ">Crear Cuenta</p>
+                    <input 
+                        className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"    
+                        type="text"
+                        name="user_name"
+                        value={form.user_name}
+                        onChange = {handleChange}
+                        placeholder="Nombre de Usuario"
+                        required
+                    />
 
-                <input
-                    className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="Correo electronico"
-                    required
-                />
-                <input
-                    className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Contraseña"
-                    required
-                />            
+                    <input
+                        className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder="Correo electronico"
+                        required
+                    />
+                    <input
+                        className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        type="password"
+                        name="password"
+                        value={form.password}
+                        onChange={handleChange}
+                        placeholder="Contraseña"
+                        required
+                    />            
 
-                <Button type="submit">Crear Cuenta</Button>
-            </div>
-            {error && <p>{error}</p>}
-            {sucess && <p>Cuenta Creada Correctamente</p>}
-        </form>
+                    <Button type="submit">Crear Cuenta</Button>
+                    {sucess && (<Button variant="link" href="/login">Regresar</Button>)}
+                </div>
+                {error && <p>{error}</p>}
+                {sucess && <p>Cuenta Creada Correctamente</p>}
+            </form>
+        </section>
     );
 };

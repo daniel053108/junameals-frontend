@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import {product} from "./ProductsGrid";
+import { FaChevronRight, FaChevronLeft} from  "react-icons/fa";
 
 type Direction = "left" | "right";
 
@@ -31,7 +32,7 @@ export default function RecommendedCarousel(){
                             hover:bg-green-700 hover:scale-105 hover:text-xl " 
                 onClick={() => scroll("left")}
             >
-                ◀
+                <FaChevronLeft/>
             </button>
 
             <div ref = {carouselRef} 
@@ -54,7 +55,7 @@ export default function RecommendedCarousel(){
                             hover:bg-green-700 hover:scale-105 hover:text-xl"
                 onClick={() => scroll("right")} 
             >
-                ▶
+                <FaChevronRight/>
             </button>
         </section>
     );

@@ -6,8 +6,10 @@ import Button from "@/components/ui/Button";
 import { MdOutlineRemoveShoppingCart } from "react-icons/md"
 import useCreateOrder from "@/components/hooks/useCreateOrder"; 
 import { useRouter } from "next/navigation";
-export default function CartItemsGrid() {
+import { useAuth } from "@/context/authContext";
 
+export default function CartItemsGrid() {
+    const {addresses} = useAuth();
     const { cantItems, cartItems, setCartModifiqued, addToCart, removeFromCart, clearCart, total} = useCart();
     const { order, createOrder, statusCreateOrder, loadingOrder } = useCreateOrder();
     const existProduct = cartItems.length !== 0 ? true : false;
@@ -79,7 +81,12 @@ export default function CartItemsGrid() {
                     setCartModifiqued(true);
                 }}> <MdOutlineRemoveShoppingCart className="scale-150" /> </Button>
                 {cartItems.length !== 0 &&
-                    <Button variant="primary" onClick={() => createOrder(cartItems)}>
+                    <Button variant="primary" onClick={() => {
+                            if(addresses.length === 0)
+                                router.push("/user/update-user");
+                            createOrder(cartItems)
+                        }}
+                    >
                         {messageBuyButton}
                     </Button>
                 }

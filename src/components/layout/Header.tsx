@@ -3,7 +3,8 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { useState } from "react";
 import { useAuth } from "@/context/authContext";
-import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaBars, FaTimes, FaUser, FaHome } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi"
 import { useRouter } from "next/navigation";
 
 export default function Header() {
@@ -29,8 +30,8 @@ export default function Header() {
             </a>
 
             {/* Menú Desktop */}
-            <nav className="hidden md:flex bg-gray-300 rounded-xl shadow-lg text-xl items-center hover:bg-gray-800 hover:text-white transition">
-                <Button href="/" variant="link">Inicio</Button>
+            <nav className="hidden md:flex bg-gray-300 rounded-xl shadow-lg text-xl items-center hover:bg-gray-800 hover:text-white ">
+                <Button href="/" variant="link" className="hover:scale-120"><FaHome/></Button>
 
                 <div className="relative">
                     <Button variant="link" onClick={() => setOpen(!open)}>Productos</Button>
@@ -46,23 +47,24 @@ export default function Header() {
 
                 {isLogged && (
                     <>
-                        <Button variant="link" href="/user/me">Mi Perfil</Button>
+                        <Button variant="link" href="/user/me" className="hover:scale-120"><FaUser/></Button>
                         <Button variant="link" href="/user/orders">Mis pedidos</Button>
                         <Button
+                            className="hover:scale-120 text-2xl"
                             variant="link"
                             onClick={() => {
                                 logout();
                                 router.push("/");
                             }}
                         >
-                            Cerrar Sesión
+                            <FiLogOut/>
                         </Button>
                     </>
                 )}
             </nav>
 
             {/* Carrito */}
-            <Button variant="link" href="/user/cart" className="hidden md:flex text-3xl">
+            <Button variant="link" href="/user/cart" className="hidden md:flex text-3xl" onClick={()=>setOpen(false)}>
                 <FaShoppingCart />
             </Button>
 
@@ -77,8 +79,8 @@ export default function Header() {
 
             {/* Menú móvil */}
             {mobileMenu && (
-                <div className="absolute top-24 left-0 w-full bg-gray-800 text-white flex flex-col items-center z-50 gap-4 py-6 md:hidden shadow-xl">
-                    <Button href="/" variant="link" onClick={() => setMobileMenu(false)}>Inicio</Button>
+                <div className="absolute top-24 right-0 w-50 bg-secondary rounded-xl flex flex-col items-center z-50 gap-4 py-6  md:hidden shadow-xl">
+                    <Button href="/" className="hover:scale-120" variant="link" onClick={() => setMobileMenu(false)}><FaHome/></Button>
                     <Button href="/products/bowls" variant="link" onClick={() => setMobileMenu(false)}>Bowls</Button>
                     <Button href="/products/weekly-menu" variant="link" onClick={() => setMobileMenu(false)}>Menú Semanal</Button>
 
@@ -90,7 +92,7 @@ export default function Header() {
 
                     {isLogged && (
                         <>
-                            <Button href="/user/me" variant="link" onClick={() => setMobileMenu(false)}>Mi Perfil</Button>
+                            <Button href="/user/me" variant="link" onClick={() => setMobileMenu(false)} className="hover:scale-120"><FaUser/></Button>
                             <Button href="/user/orders" variant="link" onClick={() => setMobileMenu(false)}>Mis pedidos</Button>
                             <Button
                                 variant="link"
@@ -100,7 +102,7 @@ export default function Header() {
                                     router.push("/");
                                 }}
                             >
-                                Cerrar Sesión
+                                <FiLogOut/>
                             </Button>
                         </>
                     )}

@@ -99,6 +99,7 @@ export default function Header() {
                                 onClick={() => {
                                     logout();
                                     setMobileMenu(false);
+                                    
                                     router.push("/");
                                 }}
                             >

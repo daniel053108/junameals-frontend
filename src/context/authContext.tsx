@@ -254,15 +254,22 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
     };
 
     const logout = async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
-            method: "POST",
-            credentials: "include",
-        });
-        setUser(null);
-        setAddresses([]);
-        setIdDefaultAddress(null);
-        setErrorMessage([]);
-        setSuccessMessage([]);
+        try {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+                method: "POST",
+                credentials: "include",
+            });
+        } catch (error) {
+            console.error("Error al llamar al logout del server", error);
+        } finally {
+            // Limpiamos el estado SIEMPRE, incluso si el fetch falla
+            setUser(null);
+            setAddresses([]);
+            setIdDefaultAddress(null);
+            setErrorMessage([]);
+            setSuccessMessage([]);
+            // Esto limpia cualquier rastro de memoria en el navegador
+        }
     };
 
     return(

@@ -156,8 +156,10 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                                 key={product.id} 
                                 variant="primary" 
                                 onClick={() => {
-                                    if(addresses.length === 0)
+                                    if(addresses.length === 0){
                                         router.push("/user/update-user");
+                                        return;
+                                    }
                                     createOrder([product])
                                 }}
                             >

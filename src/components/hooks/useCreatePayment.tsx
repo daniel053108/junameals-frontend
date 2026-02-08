@@ -6,10 +6,12 @@ export default function useCreatePayment(orderId: number) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const createPayment = async () => {
+    const createPayment = async () => {        
         try {
             setLoading(true);
             setError(null);
+    console.log(orderId);
+
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments/preference`, {
                 method: "POST",
                 credentials: "include",

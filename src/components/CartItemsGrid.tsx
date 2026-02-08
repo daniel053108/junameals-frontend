@@ -7,6 +7,7 @@ import { MdOutlineRemoveShoppingCart } from "react-icons/md"
 import useCreateOrder from "@/components/hooks/useCreateOrder"; 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
+import { IoMdReturnLeft } from "react-icons/io";
 
 export default function CartItemsGrid() {
     const {addresses} = useAuth();
@@ -82,8 +83,10 @@ export default function CartItemsGrid() {
                 }}> <MdOutlineRemoveShoppingCart className="scale-150" /> </Button>
                 {cartItems.length !== 0 &&
                     <Button variant="primary" onClick={() => {
-                            if(addresses.length === 0)
+                            if(addresses.length === 0){
                                 router.push("/user/update-user");
+                                return;
+                            }
                             createOrder(cartItems)
                         }}
                     >

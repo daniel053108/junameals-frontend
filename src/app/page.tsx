@@ -5,7 +5,7 @@ export default function HomePage() {
     return(
       <section id = "HomePage" className="bg-white text-[#CF642C]">
         {/*Hero*/}
-        <section className="bg-[url('/images/background/BOWLS2.JPG')] bg-cover bg-center h-200 text-white flex items-center justify-center p-50">
+        <section className="bg-[url('/images/Background/BOWLS2.JPG')] bg-cover bg-center h-200 text-white flex items-center justify-center p-50">
           <section className = "bg-black rounded-3xl p-2 opacity-80">
             <h1 className="text-5xl font-playfair italic text-center">
               Bowls Saludables y Meal Preps listos para hacerte la semana mas facil.

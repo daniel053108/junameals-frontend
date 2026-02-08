@@ -5,7 +5,7 @@ export default function AboutUsPage() {
         <section
             className="
                 relative
-                bg-[url('/images/background/BOWLS3-recort.JPG')]
+                bg-[url('/images/Background/BOWLS3-recort.JPG')]
                 bg-cover
                 bg-center
                 flex

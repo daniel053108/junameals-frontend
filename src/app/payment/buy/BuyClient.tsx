@@ -202,7 +202,7 @@ export default function BuyClient() {
 
         {/* Acciones */}
         <div className="flex flex-col gap-4 items-center">
-          <PayButton orderId={order.id} />
+          <PayButton orderId={order.id} onClick={()=>{handleAddress()}}/>
           <Button className="w-50" variant="primary" onClick={() => canceledOrder(orderId)}>
             Cancelar Orden
           </Button>

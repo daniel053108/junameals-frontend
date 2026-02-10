@@ -21,6 +21,11 @@ export default function MePage() {
                 <div className={configDivUserData} >
                     <h2 className={configUserData} >Email: {user!.email}</h2>
                 </div>
+                <div className={configDivUserData}>
+                    <h2 className={configUserData}>
+                        Teléfono: {user!.phone_number || "No registrado"}
+                    </h2>
+                </div>
                 <div className={configDivUserData} >
                     <h2 className={configUserData} >Contraseña: ********</h2>
                 </div>

@@ -7,6 +7,7 @@ export type User = {
     role: string;
     name: string;
     email: string;
+    phone_number: string | null;
     id_cart: number;
 };
 
@@ -37,6 +38,7 @@ type AuthContextType = {
     updateName: (name:string) => void;
     updateEmail: (email:string) => void;
     updatePassword: (password:string, newPassword:string) => void;
+    updatePhoneNumber: (phone:string) => void;
     idDefaultAddress: number | null;
     isLogged: boolean;
     loading: boolean;
@@ -45,6 +47,7 @@ type AuthContextType = {
     clearMessages: () => void;
     logout: () => Promise<void>;
 }
+
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -249,6 +252,39 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
         });
     };
 
+    const updatePhoneNumber = (phone: string) => {
+        if (!user) return;
+
+        fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me/updatePhoneNumber`,
+            {
+                credentials: "include",
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone_number: phone }),
+            }
+        )
+        .then(async (res) => {
+            const message = await res.json();
+
+            if (!res.ok) {
+                setErrorMessage(prev => [...prev, message.error]);
+                return;
+            }
+
+            setSuccessMessage(prev => [...prev, message.message]);
+
+            setUser({
+                ...user,
+                phone_number: phone,
+            });
+        })
+        .catch(() => {
+            setErrorMessage(prev => [...prev, "Error al actualizar el número telefónico"]);
+        });
+    };
+
+
     const clearMessages = () => {
         setErrorMessage([]);
         setSuccessMessage([]);
@@ -295,6 +331,7 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
                 successMessages,
                 clearMessages,
                 logout,
+                updatePhoneNumber,
             }}
         >
             {children}

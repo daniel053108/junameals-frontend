@@ -7,6 +7,7 @@ export default function RegisterPage() {
     const [form, setForm] = useState({
         user_name: "",
         email: "",
+        phone_number: "",
         password: "",
     });
 
@@ -44,14 +45,24 @@ export default function RegisterPage() {
         }
 
         setSucess(true);
-        setForm({ user_name: "", email: "", password: "" });
+        setForm({
+            user_name: "",
+            email: "",
+            phone_number: "",
+            password: "",
+        });
     };
 
     return (
         <section className="h-160">
-            <form onSubmit={handleSubmit} className="flex flex-col items-center h-140 w-full p-10">
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-center h-140 w-full p-10"
+            >
                 <div className="flex flex-col gap-10 bg-secondary rounded-3xl w-100 p-20 items-center">
-                    <p className="font-playfair scale-160 font-bold">Crear Cuenta</p>
+                    <p className="font-playfair scale-160 font-bold">
+                        Crear Cuenta
+                    </p>
 
                     <input
                         className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
@@ -69,12 +80,23 @@ export default function RegisterPage() {
                         name="email"
                         value={form.email}
                         onChange={handleChange}
-                        placeholder="Correo electronico"
+                        placeholder="Correo electrónico"
+                        required
+                    />
+
+                    {/* PHONE NUMBER */}
+                    <input
+                        className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        type="tel"
+                        name="phone_number"
+                        value={form.phone_number}
+                        onChange={handleChange}
+                        placeholder="Número de teléfono"
                         required
                     />
 
                     {/* PASSWORD CON OJITO */}
-                    <div className="flex flex-row">
+                    <div className="flex flex-row items-center gap-2">
                         <input
                             className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
                             type={showPassword ? "text" : "password"}
@@ -84,22 +106,26 @@ export default function RegisterPage() {
                             placeholder="Contraseña"
                             required
                         />
-    
+
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="text-2xl z-50"
+                            className="z-50 text-2xl"
                         >
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
 
                     <Button type="submit">Crear Cuenta</Button>
-                    {sucess && <Button variant="link" href="/login">Regresar</Button>}
+                    {sucess && (
+                        <Button variant="link" href="/login">
+                            Regresar
+                        </Button>
+                    )}
                 </div>
 
                 {error && <p>{error}</p>}
-                {sucess && <p>Cuenta Creada Correctamente</p>}
+                {sucess && <p>Cuenta creada correctamente</p>}
             </form>
         </section>
     );

@@ -5,8 +5,10 @@ import Button from "@/components/ui/Button";
 
 export default function UpdateUserFormPage() {
     const { user, isLogged, loading, addresses, idDefaultAddress, errorMessages, successMessages, clearMessages,
-        updateName, updateAddress, updateEmail, updatePassword, setUserDataModifiqued, userModifiqued, removeAddress 
+        updateName, updateAddress, updateEmail, updatePassword, setUserDataModifiqued, userModifiqued, removeAddress,
+        updatePhoneNumber 
      } = useAuth();
+    const [ phoneModifiqued, setPhoneModifiqued ] = useState(false);
     const [ nameModifiqued, setNameModifiqued ] = useState(false);
     const [ emailModifiqued, setEmailModifiqued ] = useState(false);
     const [ passwordModifiqued, setPasswordModifiqued ] = useState(false);
@@ -15,9 +17,11 @@ export default function UpdateUserFormPage() {
     const [ form, setForm ] = useState({
         name: "",
         email: "",
+        phone_number: "",
         actualPassword: "",
         newPassword: ""
     })
+
 
     const [ formAddresses, setFormAddresses ] = useState<Address[]>([]);
 
@@ -27,16 +31,19 @@ export default function UpdateUserFormPage() {
 
     useEffect(() => {
         if(!user)return;
+
         setForm({
             name: user.name,
             email: user.email,
+            phone_number: user.phone_number || "",
             actualPassword: "",
             newPassword:""
-        })
+        });
 
         setIdDefAddress(idDefaultAddress);
         setFormAddresses(addresses);
-    }, [isLogged, addresses, user, userModifiqued])
+    }, [isLogged, addresses, user, userModifiqued]);
+
 
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -55,6 +62,12 @@ export default function UpdateUserFormPage() {
             setPasswordModifiqued(false);
             updatePassword(form.actualPassword, form.newPassword);
         }
+
+        if(phoneModifiqued){
+            setPhoneModifiqued(false);
+            updatePhoneNumber(form.phone_number);
+        }
+
 
         if(addressesModifiqued){
             setAddressesModifiqued(false);
@@ -127,6 +140,19 @@ export default function UpdateUserFormPage() {
                             setEmailModifiqued(true);
                         }} 
                     ></input>
+                </div>
+                <div className={`${configDivInputs}`} >
+                    <p className={`${configPInputs}`} >Teléfono:</p>
+                    <input 
+                        name="phone_number"
+                        value={form.phone_number}
+                        className={`${configFormInputs}`}
+                        onChange={(e) => {
+                            handleChange(e);
+                            setPhoneModifiqued(true);
+                        }}
+                        placeholder="+52 664 123 4567"
+                    />
                 </div>
                 <div className={`${configDivInputs}`} >
                     <p className={`${configPInputs}`} >Password:</p>

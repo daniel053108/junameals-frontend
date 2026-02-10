@@ -46,3 +46,16 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif, var(--font-playfair), var(--font-saira);
 }
+
+/* Chrome, Edge, Safari */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-password-toggle-button {
+  display: none;
+}
+
+/* Safari específico */
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}

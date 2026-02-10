@@ -3,88 +3,110 @@ import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-export default function LoginPage(){
-
+export default function LoginPage() {
     const { isLogged, setUserModifiqued } = useAuth();
     const router = useRouter();
 
     const [form, setForm] = useState({
         user_email: "",
-        password: "",        
+        password: "",
     });
 
-    const [error,setError] = useState("");
-
-    const [sucess,setSucess] = useState(false);
+    const [error, setError] = useState("");
+    const [sucess, setSucess] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
-        if(isLogged){
+        if (isLogged) {
             router.push("/");
         }
-    },[isLogged]);
+    }, [isLogged]);
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value,
         });
     };
 
-    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
         setSucess(false);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,{
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(form),
-            credentials: "include",
-        });
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+                credentials: "include",
+            }
+        );
 
         const data = await res.json();
 
-        if(!res.ok){
-            setError( data.error || "Error al Iniciar Sesion");
+        if (!res.ok) {
+            setError(data.error || "Error al Iniciar Sesion");
             return;
-        }else if(res.ok){
+        } else {
             setUserModifiqued(true);
         }
 
         setSucess(true);
-        setForm({user_email: "", password: ""});
+        setForm({ user_email: "", password: "" });
         router.push("/");
     };
 
-    return(
+    return (
         <form onSubmit={handleSubmit} className="flex flex-col items-center h-140 w-full p-10">
             <div className="flex flex-col gap-10 bg-secondary rounded-3xl w-100 p-20 items-center">
-                <p className="font-playfair scale-160 font-bold ">Iniciar Sesion</p>
-                <input 
-                    className="scale-150 scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"    
+                <p className="font-playfair scale-160 font-bold">Iniciar Sesion</p>
+
+                <input
+                    className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
                     type="text"
                     name="user_email"
                     value={form.user_email}
-                    onChange = {handleChange}
+                    onChange={handleChange}
                     placeholder="Nombre de Usuario o Correo electronico"
                     required
                 />
-                <input
-                    className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Contraseña"
-                    required
-                />            
+
+                {/* PASSWORD CON OJITO */}
+                <div className="flex flex-row">
+                    <input
+                        className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        value={form.password}
+                        onChange={handleChange}
+                        placeholder="Contraseña"
+                        required
+                    />
+
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="text-2xl z-50"
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                </div>
 
                 <Button type="submit">Iniciar Sesion</Button>
-                <Button variant="none" className="hover:underline underline-offset-5 font-saira font-bold hover:scale-105 transition-all" 
-                        href="/register" 
-                >Crear Cuenta</Button>
+
+                <Button
+                    variant="none"
+                    className="hover:underline underline-offset-5 font-saira font-bold hover:scale-105 transition-all"
+                    href="/register"
+                >
+                    Crear Cuenta
+                </Button>
             </div>
+
             {error && <p>{error}</p>}
             {sucess && <p>Inicio de Sesion Correcto</p>}
         </form>

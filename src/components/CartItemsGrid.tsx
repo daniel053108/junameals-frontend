@@ -21,6 +21,7 @@ export default function CartItemsGrid() {
         total 
     } = useCart();
 
+    const [updatingProductId, setUpdatingProductId] = useState<number | null>(null);
     const { order, createOrder, statusCreateOrder, loadingOrder } = useCreateOrder();
     const existProduct = cartItems.length !== 0;
     const configGrid = existProduct ? "grid grid-cols-1 md:grid-cols-3 gap-6" : "";
@@ -54,6 +55,35 @@ export default function CartItemsGrid() {
         createOrder(cartItems);
     };
 
+    const handleAdd = async (product: any) => {
+        if (updatingProductId !== null) return;
+
+        setUpdatingProductId(product.id);
+
+        try {
+            await addToCart({
+                id: product.id,
+                quantity: product.quantity,
+                price: product.price,
+            });
+
+        } finally {
+            setUpdatingProductId(null);
+        }
+    };
+
+    const handleRemove = async (productId: number) => {
+        if (updatingProductId !== null) return;
+
+        setUpdatingProductId(productId);
+
+        try {
+            await removeFromCart(productId);
+        } finally {
+            setUpdatingProductId(null);
+        }
+    };
+
     return (
         <section>
             <div className={`${configGrid} flex flex-row gap-6 p-4`}>
@@ -73,30 +103,25 @@ export default function CartItemsGrid() {
                             <div className="flex flex-row items-center justify-center w-40 rounded-3xl bg-gray-300">
                                 <Button
                                     variant="none"
-                                    className="bg-green-900 rounded-3xl text-white text-3xl scale-50 hover:scale-60"
-                                    onClick={() => {
-                                        removeFromCart(product.id);
-                                        setCartModifiqued(true);
-                                    }}
+                                    disabled={updatingProductId === product.id}
+                                    className={`bg-green-900 rounded-3xl text-white text-3xl scale-50 
+                                        ${updatingProductId === product.id ? "opacity-50 cursor-not-allowed" : "hover:scale-60"}`}
+                                    onClick={() => handleRemove(product.id)}
                                 >
-                                    -
+                                    {updatingProductId === product.id ? "…" : "-"}
                                 </Button>
+
 
                                 <p>{product.quantity}</p>
 
                                 <Button
                                     variant="none"
-                                    className="bg-green-900 rounded-3xl text-white text-3xl scale-50 hover:scale-60"
-                                    onClick={() => {
-                                        addToCart({
-                                            id: product.id,
-                                            quantity: product.quantity,
-                                            price: product.price,
-                                        });
-                                        setCartModifiqued(true);
-                                    }}
+                                    disabled={updatingProductId === product.id}
+                                    className={`bg-green-900 rounded-3xl text-white text-3xl scale-50 
+                                        ${updatingProductId === product.id ? "opacity-50 cursor-not-allowed" : "hover:scale-60"}`}
+                                    onClick={() => handleAdd(product)}
                                 >
-                                    +
+                                    {updatingProductId === product.id ? "…" : "+"}
                                 </Button>
                             </div>
                         </div>

@@ -11,6 +11,7 @@ type ButtonProps = {
   href?: string;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 };
 
 export default function  Button({
@@ -20,6 +21,7 @@ export default function  Button({
   href,
   onClick,
   type = "button",
+  disabled,
 } : ButtonProps ) {
   const baseStyles = `
     px-8 py-2
@@ -92,6 +94,7 @@ export default function  Button({
   if(className){
     return(
       <button
+        disabled = {disabled}
         type={type}
         onClick={onClick}
         className={`${baseStyles} ${className} ${variants[variant]}`}
@@ -102,6 +105,7 @@ export default function  Button({
   }
   return (
     <button
+      disabled = {disabled}
       type={type}
       onClick={onClick}
       className={`${baseStyles} ${variants[variant]}`}

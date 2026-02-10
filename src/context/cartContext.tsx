@@ -113,7 +113,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             setTotal(0);
         }
 
-    },[cart, user]);
+    },[cart, user, cartModifiqued]);
 
     useEffect(() => {
         if(!cart || !user)return;
@@ -171,9 +171,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         };
 
         const itemAdded = await res.json();
+        setCartModifiqued(true);
 
-        setTotal(prevTotal => Math.round((prevTotal + Number(itemAdded.price))*10)/10);
-        setCantItems(prevCantItems => prevCantItems + 1);
     };
 
     {/*RemoveFromCart*/}
@@ -187,9 +186,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if(!res.ok)return;
 
         const itemDelete:CartItem = await res.json();
-
-        setTotal(prevTotal => Math.round((prevTotal - itemDelete.price) * 10)/10);
-        setCantItems(prevCantItems => prevCantItems - 1);
+        setCartModifiqued(true);
     };
 
     {/*clearCart*/}

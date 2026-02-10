@@ -8,6 +8,7 @@ const statusOrder: Record<OrderStatus, string> = {
     approved: "Aprobado",
     rejected: "Rechazado",
     pending: "Pendiente",
+    canceled: "Cancelado",
     unknown: "Desconocido"
 }
 

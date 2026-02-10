@@ -1,7 +1,10 @@
 import ProductsGrid, {product} from "@/components/ProductsGrid";
 
 async function getWeeklyMenu() : Promise<product[]> {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/weeklyMenu`);
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/products/weeklyMenu`,
+        { cache: "no-store" }
+    );
 
     if(!res.ok) return [];
 

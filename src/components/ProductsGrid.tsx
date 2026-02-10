@@ -188,7 +188,7 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                                 </Button>
                                 <ConfirmModal
                                     open={openProductId === product.id}
-                                    message="Necesitas registrar mínimo una dirección de entrega para poder continuar con la compra."
+                                    message="Necesitas registrar mínimo una dirección de entrega para poder continuar con la compra. Al aceptar seras redirigido a la seccion para registrar una direccion."
                                     onAccept={handleAccept}
                                     onClose={() => setOpenProductId(null)}
                                 />

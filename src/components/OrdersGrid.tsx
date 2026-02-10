@@ -5,11 +5,12 @@ import { formatDate } from "@/utils/formatDate";
 import Button from "./ui/Button";
 
 const statusOrder: Record<OrderStatus, string> = {
-    approved: "Aprobado",
+    paid: "Pagado",
     rejected: "Rechazado",
     pending: "Pendiente",
     canceled: "Cancelado",
-    unknown: "Desconocido"
+    unknown: "Desconocido",
+    failed: "Error al pagar"
 }
 
 const statusDelivery: Record<OrderStatusDelivery,string> = {

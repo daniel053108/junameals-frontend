@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Address } from "@/context/authContext";
 
-export type OrderStatus = "approved" | "rejected" | "pending" | "unknown" | "canceled";
+export type OrderStatus = "paid" | "rejected" | "pending" | "unknown" | "canceled" | "failed";
 export type OrderStatusDelivery = "delivered" | "pending" | "unknown" | "arriving";
 
 export type OrderItem = {

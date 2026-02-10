@@ -2,27 +2,31 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import Button from "@/components/ui/Button";
+import {useRouter} from "next/navigation";
 
 export default function RegisterAddressPage(){
-    const { addresses, addAddress, errorMessages, successMessages, clearMessages, setUserDataModifiqued } = useAuth();
+    const { user, addresses, addAddress, errorMessages, successMessages, clearMessages, setUserDataModifiqued } = useAuth();
     const [ address , setAddress ] = useState({
         id: 0,
         street: "",
         neighborhood: "",
         city: "",
         state: "",
-        postalCode: "",
+        postal_code: "",
         country: "Mexico",
-        deliveryNotes: "",
-        isDefault:false
+        delivery_notes: "",
+        is_default:false,
+        is_midpoint:false
     });
     const [ message, setMessage ] = useState("");
+    const router = useRouter();
 
     useEffect(() => {
+        clearMessages();
         if(addresses.length === 0){
-            setAddress({...address, isDefault:true});
+            setAddress({...address, is_default:true});
         }else{
-            setAddress({...address, isDefault:false});
+            setAddress({...address, is_default:false});
         }
     }, [addresses]);
 
@@ -41,16 +45,25 @@ export default function RegisterAddressPage(){
             neighborhood: "",
             city: "",
             state: "",
-            postalCode: "",
+            postal_code: "",
             country: "Mexico",
-            deliveryNotes: "",
-            isDefault:false
+            delivery_notes: "",
+            is_default:false,
+            is_midpoint:false
         });
         setUserDataModifiqued(true);
 
+        router.back();
     };
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.type === "checkbox"){
+            setAddress({
+               ...address,
+               [e.target.name]: e.target.checked 
+            });
+            return;
+        }
         setAddress({
             ...address,
             [e.target.name]: e.target.value
@@ -63,7 +76,7 @@ export default function RegisterAddressPage(){
             return;
         }
 
-        setAddress({...address, isDefault: !address.isDefault})
+        setAddress({...address, is_default: !address.is_default})
     };
 
     return (
@@ -82,7 +95,7 @@ export default function RegisterAddressPage(){
                         <input
                             type="checkbox"
                             className="sr-only peer"
-                            checked={address.isDefault}
+                            checked={address.is_default}
                             onChange={handleChangeChecked}
                         />
 
@@ -154,8 +167,8 @@ export default function RegisterAddressPage(){
                 <div>
                     <p className={`${configPInputs}`} >Codigo postal</p>
                     <input
-                        name="postalCode"
-                        value={address.postalCode}
+                        name="postal_code"
+                        value={address.postal_code}
                         className={`${configFormInputs}`}
                         placeholder="Obligatorio"
                         onChange={handleChange} 
@@ -174,13 +187,25 @@ export default function RegisterAddressPage(){
                 <div>
                     <p className={`${configPInputs}`} >Notas de entrega</p>
                     <input
-                        name="deliveryNotes"
-                        value={address.deliveryNotes}
+                        name="delivery_notes"
+                        value={address.delivery_notes}
                         className={`${configFormInputs}`}
                         onChange={handleChange}
                         placeholder="Opcional"
                     ></input>
                 </div>
+                {user?.role === "admin" && (
+                    <div>
+                        <p className={`${configPInputs}`} >Punto Medio</p>
+                        <input
+                            type="checkbox"
+                            name="is_midpoint"
+                            checked={address.is_midpoint}
+                            className={`scale-150`}
+                            onChange={handleChange}
+                        ></input>
+                    </div>
+                )}
                 <div className="flex justify-center mt-4">
                     <Button type="submit" variant="primary"  >Registrar Direccion</Button>
                 </div>

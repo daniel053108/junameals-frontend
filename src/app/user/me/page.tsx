@@ -33,7 +33,7 @@ export default function MePage() {
                         </div>
                     )}
                     {addresses.map((address) => {
-                        if(address.isDefault){
+                        if(address.is_default){
                             return(
                                 <div key={address.id} className={configDivUserData}>
                                     <p className="font-saira font-bold text-center text-xl bg-gray-400 rounded-xl">Direccion Principal</p>
@@ -41,9 +41,9 @@ export default function MePage() {
                                     <h1 className={configH1Address} >Colonia: {address.neighborhood}</h1>
                                     <h1 className={configH1Address} >Ciudad: {address.city}</h1>
                                     <h1 className={configH1Address} >Estado: {address.state}</h1>
-                                    <h1 className={configH1Address} >codigo Postal: {address.postalCode}</h1>
+                                    <h1 className={configH1Address} >codigo Postal: {address.postal_code}</h1>
                                     <h1 className={configH1Address} >Pais: {address.country}</h1>
-                                    <h1 className={configH1Address} >Notas de entrega: {address.deliveryNotes}</h1>
+                                    <h1 className={configH1Address} >Notas de entrega: {address.delivery_notes}</h1>
                                 </div>
                             )
                         }

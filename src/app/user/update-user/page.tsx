@@ -75,7 +75,7 @@ export default function UpdateUserFormPage() {
     }
 
     const handleAddressChange = (id:number|null, field: keyof Address, value:string | boolean) => {        
-        if(field === "isDefault"){
+        if(field === "is_default"){
             if(!value)return;
             setIdDefAddress(id);
             setFormAddresses(prev =>
@@ -173,7 +173,7 @@ export default function UpdateUserFormPage() {
                                         onChange={(e) =>{
                                             handleAddressChange(
                                             address.id,
-                                            "isDefault",
+                                            "is_default",
                                             e.target.checked
                                             );
                                             setAddressesModifiqued(true);
@@ -202,7 +202,19 @@ export default function UpdateUserFormPage() {
                                     ></div>
                                 </label>
                             </div>
-
+                            {user?.role === "admin" && (
+                                <div>
+                                    <p className={`${configPInputs}`} >Punto Medio</p>
+                                    <input
+                                        type="checkbox"
+                                        checked={address.is_midpoint}
+                                        onChange={(e) => {
+                                            handleAddressChange(address.id, "is_midpoint", e.target.checked);
+                                            setAddressesModifiqued(true);
+                                        }}
+                                    ></input>
+                                </div>
+                            )}
                             <div>
                                 <p className={`${configPInputs}`} >Calle</p>
                                 <input
@@ -250,10 +262,10 @@ export default function UpdateUserFormPage() {
                             <div>
                                 <p className={`${configPInputs}`} >Codigo postal</p>
                                 <input
-                                    value={address.postalCode}
+                                    value={address.postal_code}
                                     className={`${configFormInputs}`}
                                     onChange={(e) => {
-                                        handleAddressChange(address.id, "postalCode", e.target.value);
+                                        handleAddressChange(address.id, "postal_code", e.target.value);
                                         setAddressesModifiqued(true);
                                     }}
                                 ></input>
@@ -272,10 +284,10 @@ export default function UpdateUserFormPage() {
                             <div>
                                 <p className={`${configPInputs}`} >Notas de entrega</p>
                                 <input
-                                    value={address.deliveryNotes}
+                                    value={address.delivery_notes}
                                     className={`${configFormInputs}`}
                                     onChange={(e) => {
-                                        handleAddressChange(address.id, "deliveryNotes", e.target.value);
+                                        handleAddressChange(address.id, "delivery_notes", e.target.value);
                                         setAddressesModifiqued(true);
                                     }}
                                 ></input>
@@ -287,7 +299,7 @@ export default function UpdateUserFormPage() {
                         </div>
                     ))}
                     <div className="flex justify-center mt-2">
-                        <Button variant="primary" href = "/user/register-address">Agregar Direccion</Button>
+                        <Button type="submit" variant="primary" href = "/user/register-address" >Agregar Direccion</Button>
                     </div>
                 </div>
                 <div className="flex items-center justify-center">

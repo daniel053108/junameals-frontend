@@ -16,10 +16,11 @@ export type Address = {
     neighborhood: string;
     city: string;
     state: string;
-    postalCode: string;
+    postal_code: string;
     country: string;
-    deliveryNotes: string;
-    isDefault: boolean;
+    delivery_notes: string;
+    is_default: boolean;
+    is_midpoint: boolean;
 }
 
 type TypeMessage = "error" | "success";
@@ -76,7 +77,7 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
     
     useEffect(() => {
         fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me/getAddresses`,{
+            `${process.env.NEXT_PUBLIC_API_URL}/api/addresses/getAddresses`,{
                 credentials: "include"
             }
         )
@@ -119,7 +120,7 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
     const addAddress = (address: Address) => {
         if(!user) return;
         fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me/addAddress`,{
+            `${process.env.NEXT_PUBLIC_API_URL}/api/addresses/addAddress`,{
                 method: "POST",
                 credentials: "include",
                 headers: {"Content-Type":"application/json"},
@@ -140,7 +141,7 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
     const updateAddress = (address:Address) => {
         if(!user) return;
         fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me/updateAddress`,{
+            `${process.env.NEXT_PUBLIC_API_URL}/api/addresses/updateAddress`,{
                 method: "PUT",
                 credentials: "include",
                 headers: {"Content-Type":"application/json"},
@@ -162,7 +163,7 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
     const removeAddress = (id: number | null) => {
         if(!id) return;
         fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me/removeAddress/id/${id}`,{
+            `${process.env.NEXT_PUBLIC_API_URL}/api/addresses/removeAddress/id/${id}`,{
                 method: "DELETE",
                 credentials: "include",
             }
@@ -268,6 +269,7 @@ export function AuthProvider({ children}: { children: React.ReactNode}) {
             setIdDefaultAddress(null);
             setErrorMessage([]);
             setSuccessMessage([]);
+            window.location.href = "/login";
             // Esto limpia cualquier rastro de memoria en el navegador
         }
     };

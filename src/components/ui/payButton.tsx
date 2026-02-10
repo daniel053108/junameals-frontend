@@ -6,16 +6,18 @@ import { useRouter } from "next/navigation";
 
 type Props = {
     orderId: number;
+    onClick?: () => void;
 };
 
-export default function PayButton({ orderId }: Props) {
+export default function PayButton({ orderId, onClick }: Props) {
     const { createPayment, loading, error } = useCreatePayment(orderId);
     const { addresses } = useAuth();
     const router = useRouter();
     return (
-        <div className="flex flex-col gap-2 md:px-75 mt-4">
+        <div className="flex flex-col gap-2 mt-4">
             <button
                 onClick={() => {
+                    onClick
                     if(addresses.length === 0){
                         router.push("/user/update-user");
                         return;

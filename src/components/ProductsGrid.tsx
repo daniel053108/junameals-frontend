@@ -8,6 +8,7 @@ import { FaCartArrowDown } from "react-icons/fa6"
 import { TbShoppingCartCheck } from "react-icons/tb" 
 import useCreateOrder from "./hooks/useCreateOrder";
 import { useEffect, useState } from "react";
+import ConfirmModal from "./ui/acceptModal";
 
 export type product = {
     id: number;
@@ -30,6 +31,17 @@ export default function ProductsGrid({ products }: { products: product[] }) {
     const [ messageBuyButton, setMessageBuyButton ] = useState<string>("");
     const [ productModifiqued, setProductModifiqued ] = useState(false);
     const router = useRouter();
+    const [buyingProductId, setBuyingProductId] = useState<number | null>(null);
+    const [openProductId, setOpenProductId] = useState<number | null>(null);
+
+
+    const handleAccept = () => {
+        setOpenProductId(null);
+
+        setTimeout(() => {
+        router.push("../user/register-address");
+        }, 200);
+    };
 
     const showCheck = (id: number) => {
         setCheckProductId(id);
@@ -43,18 +55,21 @@ export default function ProductsGrid({ products }: { products: product[] }) {
     }, [productModifiqued])
 
     useEffect(() => {
-        if(statusCreateOrder === "pending" && !loadingOrder){
+        if (!buyingProductId) return;
+
+        if (statusCreateOrder === "pending" && !loadingOrder) {
             setMessageBuyButton("Comprar");
-        }else if(statusCreateOrder === "error" && !loadingOrder){
-            setMessageBuyButton("Error")
-        }else if(statusCreateOrder === "success" && loadingOrder){
-            setMessageBuyButton("Redirigiendo...")
-        }else if(statusCreateOrder === "success" && !loadingOrder){
+        } else if (statusCreateOrder === "error" && !loadingOrder) {
+            setMessageBuyButton("Error");
+        } else if (statusCreateOrder === "success" && loadingOrder) {
+            setMessageBuyButton("Redirigiendo...");
+        } else if (statusCreateOrder === "success" && !loadingOrder) {
             router.push(`/payment/buy?orderId=${order!.id}`);
-        }else if(statusCreateOrder === "pending" && loadingOrder){
+        } else if (statusCreateOrder === "pending" && loadingOrder) {
             setMessageBuyButton("Creando orden de compra...");
         }
-    }, [statusCreateOrder, loadingOrder]);
+    }, [statusCreateOrder, loadingOrder, buyingProductId]);
+
 
     const deleteProduct = (productId:number) => {
         fetch(
@@ -97,7 +112,7 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                 return(
                 <div
                     key={product.id}
-                    className="border rounded-xl p-4 shadow-lg"
+                    className="border rounded-xl p-10 shadow-lg"
                 >
                     <img
                         src={product.image}
@@ -105,7 +120,7 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                         className="w-full h-90 object-cover rounded-lg"
                     />
 
-                    <h2 className="text-xl font-playfair italic mt-3">
+                    <h2 className="text-xl font-playfair italic mt-3 w-full">
                         {product.name}
                     </h2>
 
@@ -113,15 +128,15 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                         {product.description}
                     </p>
 
-                    <p className="text-lg font-bold mt-2">
+                    <p className="text-lg font-bold mt-2 w-full">
                         ${product.price}
                     </p>
 
-                    <div className="w-full flex flex-row justify-center h-6 scale-125 gap-2">
+                    <div className="flex flex-col items-center mt-4 scale-120 gap-2">
                         {isLogged ? (
                         <Button
                             variant="primary"
-                            className="relative"
+                            className="relative py-3"
                             onClick={() => {
                             addToCart({
                                 id: product.id,
@@ -152,19 +167,32 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                         )}
 
                         {isLogged ? (
-                            <Button 
-                                key={product.id} 
-                                variant="primary" 
-                                onClick={() => {
-                                    if(addresses.length === 0){
-                                        router.push("/user/update-user");
-                                        return;
-                                    }
-                                    createOrder([product])
-                                }}
-                            >
-                                {messageBuyButton}
-                            </Button>
+                            <div className="">
+                                <Button
+                                    className="py-2 scale-80"
+                                    variant="primary"
+                                    onClick={() => {
+                                        if (addresses.length === 0) {
+                                            setOpenProductId(product.id);
+                                            return;
+                                        }
+
+                                        setBuyingProductId(product.id);
+                                        setMessageBuyButton("Creando orden de compra...");
+                                        createOrder([product]);
+                                    }}
+                                >
+                                    {buyingProductId === product.id
+                                        ? messageBuyButton
+                                        : "Comprar"}
+                                </Button>
+                                <ConfirmModal
+                                    open={openProductId === product.id}
+                                    message="Necesitas registrar mínimo una dirección de entrega para poder continuar con la compra."
+                                    onAccept={handleAccept}
+                                    onClose={() => setOpenProductId(null)}
+                                />
+                            </div>
                         ):(
                             <Button variant="primary" href="/login">
                                 Comprar

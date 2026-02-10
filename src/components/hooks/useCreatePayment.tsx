@@ -10,7 +10,6 @@ export default function useCreatePayment(orderId: number) {
         try {
             setLoading(true);
             setError(null);
-    console.log(orderId);
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments/preference`, {
                 method: "POST",

@@ -11,6 +11,8 @@ export default function useCreateOrder() {
     const [ statusCreateOrder, setStatusCreateOrder ] = useState<StatusOrder>("pending");
     const [ order, setOrder ] = useState<Order | null>(null);
     const [loadingOrder, setLoadingOrder] = useState(false);
+    const [ success, setSuccess ] = useState(false);
+    const [ message, setMessage ] = useState("");
 
     const createOrder = async (items:product[]) => {
         try {
@@ -43,5 +45,31 @@ export default function useCreateOrder() {
         }
     };
 
-    return { order, createOrder, loadingOrder, statusCreateOrder };
+    const canceledOrder = (orderId: number) => {
+        setSuccess(false);
+        setMessage("");
+        try{
+            fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/orders/canceled-order/${orderId}`,{
+                    credentials: "include",
+                    method: "PUT"
+                }
+            )
+            .then(res => {
+                if(res.ok){
+                    setSuccess(true);
+                    setMessage("Orden calcelada correctamente");
+                    return;
+                }
+
+                setMessage("Error al cancelar orden")
+            })
+        }catch(error){
+            setMessage("Error:" + error);
+            console.log(error);
+            return;
+        }
+    };
+
+    return { order, createOrder, canceledOrder, success, message, loadingOrder, statusCreateOrder };
 }

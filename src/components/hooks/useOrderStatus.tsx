@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Address } from "@/context/authContext";
 
 export type OrderStatus = "approved" | "rejected" | "pending" | "unknown";
 export type OrderStatusDelivery = "delivered" | "pending" | "unknown" | "arriving";
@@ -21,6 +22,7 @@ export type Order = {
     payment_provider: string;
     payment_id:string;
     created_at:string;
+    address:Address;
     items: OrderItem[];
 }
 
@@ -45,6 +47,5 @@ export default function useOrderStatus(orderId: number | null) {
             })
             .finally(() => setLoading(false));
     }, [orderId]);
-
     return { order, loading };
 }

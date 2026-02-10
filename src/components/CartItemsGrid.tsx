@@ -160,7 +160,7 @@ export default function CartItemsGrid() {
             {/* CONFIRM MODAL */}
             <ConfirmModal
                 open={showConfirmModal}
-                message="Necesitas registrar mínimo una dirección de entrega para poder comprar."
+                message="Necesitas registrar mínimo una dirección de entrega para poder comprar. Al aceptar seras redirigido a la seccion para agregar una direccion."
                 onClose={() => setShowConfirmModal(false)}
                 onAccept={() => {
                     setShowConfirmModal(false);

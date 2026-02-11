@@ -10,6 +10,8 @@ export default function PagoErrorPage() {
     const orderId = Number(search.get("orderId"));
 
     const { canceledOrder } = useCreateOrder();
+    
+    canceledOrder(orderId);
 
     return (
         <section className="flex flex-col items-center justify-center h-screen gap-4">
@@ -21,7 +23,6 @@ export default function PagoErrorPage() {
             <Button
                 variant="link"
                 onClick={() => {
-                    canceledOrder(orderId);
                     router.push("/")
                 }}
             >

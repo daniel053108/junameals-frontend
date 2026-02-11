@@ -37,7 +37,8 @@ export default function RecommendedCarousel(){
 
             <div ref = {carouselRef} 
                 className="flex gap-4 overflow-x-auto scroll-smooth px-10 h-60">
-                {products?.map((product:product) => {
+                {!products ? (<h1>Ups, al parecer no hay recomendados para hoy</h1>) :
+                products?.map((product:product) => {
                     if(!product.available || !product.recommended) return;
                     return(
                     <div key={product.id}  className="min-w-[250px] bg-white rounded-xl shadow">

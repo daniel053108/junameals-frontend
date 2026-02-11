@@ -10,7 +10,7 @@ import { useAuth } from "@/context/authContext";
 import ConfirmModal from "./ui/acceptModal";
 
 export default function CartItemsGrid() {
-    const { addresses } = useAuth();
+    const { user, addresses } = useAuth();
     const { 
         cantItems, 
         cartItems, 
@@ -48,10 +48,11 @@ export default function CartItemsGrid() {
     }, [statusCreateOrder, loadingOrder]);
 
     const handleBuyClick = () => {
+        /*DESCOMENTAR PARA DIRECCIONES
         if (addresses.length === 0) {
             setShowConfirmModal(true);
             return;
-        }
+        }*/
         createOrder(cartItems);
     };
 
@@ -83,7 +84,6 @@ export default function CartItemsGrid() {
             setUpdatingProductId(null);
         }
     };
-
     return (
         <section>
             <div className={`${configGrid} flex flex-row gap-6 p-4`}>
@@ -151,7 +151,15 @@ export default function CartItemsGrid() {
                 </Button>
 
                 {existProduct && (
-                    <Button variant="primary" onClick={handleBuyClick}>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => {
+                            if(user?.role === "admin"){
+                                setShowConfirmModal(true);
+                                return;
+                            }
+                            handleBuyClick()
+                        }}>
                         {messageBuyButton}
                     </Button>
                 )}
@@ -160,10 +168,16 @@ export default function CartItemsGrid() {
             {/* CONFIRM MODAL */}
             <ConfirmModal
                 open={showConfirmModal}
-                message="Necesitas registrar mínimo una dirección de entrega para poder comprar. Al aceptar seras redirigido a la seccion para agregar una direccion."
+                message={user?.role === "admin"
+                    ?"No puedes comprar siendo administrador"
+                    :"Necesitas registrar mínimo una dirección de entrega para poder comprar. Al aceptar seras redirigido a la seccion para agregar una direccion."
+                }
                 onClose={() => setShowConfirmModal(false)}
                 onAccept={() => {
                     setShowConfirmModal(false);
+                    if(user?.role === "admin"){
+                        return;
+                    }
                     router.push("/user/register-address");
                 }}
             />

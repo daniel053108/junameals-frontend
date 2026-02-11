@@ -4,7 +4,7 @@ interface ConfirmModalProps {
   open: boolean;
   message: string;
   onAccept: () => void;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export default function ConfirmModal({
@@ -38,17 +38,18 @@ export default function ConfirmModal({
         </p>
 
         <div className="mt-6 flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="
-              rounded-lg px-4 py-2
-              bg-gray-100 text-gray-700
-              hover:bg-gray-200
-            "
-          >
-            Cancelar
-          </button>
-
+          {!!onClose && 
+            <button
+              onClick={onClose}
+              className="
+                rounded-lg px-4 py-2
+                bg-gray-100 text-gray-700
+                hover:bg-gray-200
+              "
+            >
+              Cancelar
+            </button>
+          }
           <button
             onClick={onAccept}
             className="

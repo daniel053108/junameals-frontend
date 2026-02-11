@@ -79,6 +79,8 @@ export default function RegisterAddressPage(){
         setAddress({...address, is_default: !address.is_default})
     };
 
+    if(user?.role !== "admin") return(<p className="text-center text-3xl font-bold font-saira">PAGINA TEMPORALMENTE DESHABILITADA</p>) //ELIMINAR PARA DIRECCIONES
+
     return (
         <section className="flex justify-center p-10 flex-col">
             <form onSubmit={handleSubmit} className="p-4 w-full bg-secondary rounded-xl shadow-lg">
@@ -133,7 +135,7 @@ export default function RegisterAddressPage(){
                     ></input>
                 </div>
                 <div>
-                    <p className={`${configPInputs}`} >Colonia</p>
+                    <p className={`${configPInputs}`} >{user.role !== "admin" ? "Direccion o lugar de entrega" : "Nombre del Lugar o Punto Medio"}</p>
                     <input
                         name="neighborhood"
                         value={address.neighborhood}
@@ -184,16 +186,18 @@ export default function RegisterAddressPage(){
                         onChange={handleChange}
                     ></input>
                 </div>
-                <div>
-                    <p className={`${configPInputs}`} >Notas de entrega</p>
-                    <input
-                        name="delivery_notes"
-                        value={address.delivery_notes}
-                        className={`${configFormInputs}`}
-                        onChange={handleChange}
-                        placeholder="Opcional"
-                    ></input>
-                </div>
+                {user?.role !== "admin" &&
+                    <div>
+                        <p className={`${configPInputs}`} >Indicaciones de entrega</p>
+                        <input
+                            name="delivery_notes"
+                            value={address.delivery_notes}
+                            className={`${configFormInputs}`}
+                            onChange={handleChange}
+                            placeholder="Opcional"
+                        ></input>
+                    </div>
+                }
                 {user?.role === "admin" && (
                     <div>
                         <p className={`${configPInputs}`} >Punto Medio</p>
@@ -207,7 +211,7 @@ export default function RegisterAddressPage(){
                     </div>
                 )}
                 <div className="flex justify-center mt-4">
-                    <Button type="submit" variant="primary"  >Registrar Direccion</Button>
+                    <Button type="submit" variant="primary" >Registrar Direccion</Button>
                 </div>
             </form>
             <div>

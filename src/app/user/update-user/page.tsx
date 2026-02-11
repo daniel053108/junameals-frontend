@@ -69,12 +69,13 @@ export default function UpdateUserFormPage() {
         }
 
 
+        /*ELIMINAR PARA DIRECCIONES
         if(addressesModifiqued){
             setAddressesModifiqued(false);
             formAddresses.map((addr) => 
                 updateAddress(addr)
             )
-        }
+        }*/
 
         clearMessages();
         setUserDataModifiqued(true);
@@ -180,8 +181,10 @@ export default function UpdateUserFormPage() {
                 <div className={`${configDivInputs}`} >
                     {formAddresses.length === 0 && (
                         <div>
-                            <p className="font-saira text-xl text-center" >No hay direcciones registradas</p>
-                            <h2 className="font-saira text-1xl text-center">Necesitas registrar una direccion para poder comprar</h2>
+                            {//ELIMINAR PARA DIRECCIONES
+                            //<p className="font-saira text-xl text-center" >No hay direcciones registradas</p>
+                            //<h2 className="font-saira text-1xl text-center">Necesitas registrar una direccion para poder comprar</h2>
+                            }
                         </div>
                     )}
                     {formAddresses.map((address) => (
@@ -253,7 +256,7 @@ export default function UpdateUserFormPage() {
                                 ></input>
                             </div>
                             <div>
-                                <p className={`${configPInputs}`} >Colonia</p>
+                                <p className={`${configPInputs}`} >{user?.role !== "admin" ? "Direccion o lugar de entrega":"Nombre del lugar o punto medio"}</p>
                                 <input
                                     value={address.neighborhood}
                                     className={`${configFormInputs}`}
@@ -307,26 +310,30 @@ export default function UpdateUserFormPage() {
                                     }}
                                 ></input>
                             </div>
-                            <div>
-                                <p className={`${configPInputs}`} >Notas de entrega</p>
-                                <input
-                                    value={address.delivery_notes}
-                                    className={`${configFormInputs}`}
-                                    onChange={(e) => {
-                                        handleAddressChange(address.id, "delivery_notes", e.target.value);
-                                        setAddressesModifiqued(true);
-                                    }}
-                                ></input>
-                            </div>
+                            {user?.role !== "admin" &&
+                                <div>
+                                    <p className={`${configPInputs}`} >Indicaciones de entrega</p>
+                                    <input
+                                        value={address.delivery_notes}
+                                        className={`${configFormInputs}`}
+                                        onChange={(e) => {
+                                            handleAddressChange(address.id, "delivery_notes", e.target.value);
+                                            setAddressesModifiqued(true);
+                                        }}
+                                    ></input>
+                                </div>
+                            }
                             <Button variant="primary" className="mt-4" onClick={() => {
                                 removeAddress(address.id)
                                 clearMessages();
                                 }}> Eliminar direccion </Button>
                         </div>
                     ))}
+                    {user?.role === "admin" && //ELIMINAR PARA DIRECCIONES
                     <div className="flex justify-center mt-2">
                         <Button type="submit" variant="primary" href = "/user/register-address" >Agregar Direccion</Button>
                     </div>
+                    }
                 </div>
                 <div className="flex items-center justify-center">
                     <button 

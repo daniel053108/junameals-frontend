@@ -37,7 +37,7 @@ export default function BuyClient() {
       setMidpoints(data);
     })
     .catch((error) => {
-      console.log("Error al obtener los midpoints");
+      console.log("Error al obtener los midpoints" + error);
       setMidpoints([]);
     })
   },[])
@@ -81,7 +81,7 @@ export default function BuyClient() {
     if(!success) return;
 
     const timer = setTimeout(() => {
-      router.back();
+      router.push("../user/orders");
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -96,7 +96,6 @@ export default function BuyClient() {
   order.items.forEach(i => {
     cantidadItems += i.quantity;
   });
-
   return (
     <section className="p-10">
       <div className="flex flex-col gap-6">
@@ -126,6 +125,8 @@ export default function BuyClient() {
         {/* Dirección */}
         <div className="flex flex-col gap-3  items-center">
           <label className="font-semibold font-saira">Dirección de entrega</label>
+          {<h3>Por el momento no contamos con entrega a domicilio:c, seleccione un punto medio para su entrega por favor{"<3"}</h3>//ELIMINAR PARA DIRECCIONES
+          }
 
           {/* Select principal */}
           <select
@@ -144,13 +145,13 @@ export default function BuyClient() {
           >
             <option value="">Selecciona una dirección</option>
 
-            {addresses.map((addr) => (
+            {/*addresses.map((addr) => ( DESCOMENTAR PARA DIRECCIONES
               <option key={addr.id} value={addr.id}>
                 {addr.country}, {addr.state}, {addr.city}, {addr.street}
               </option>
-            ))}
+            ))*/}
 
-            <option value="midpoint">Punto medio</option>
+            <option value="midpoint" >Punto medio</option>
           </select>
 
 
@@ -171,7 +172,8 @@ export default function BuyClient() {
             </select>
           )}
 
-          <Button onClick={()=>handleAddress()}>Confirmar Direccion</Button>
+          {//<Button onClick={()=>handleAddress()} >Confirmar Direccion</Button>
+          }
           {successMessage && (
             <div
               className="
@@ -202,7 +204,7 @@ export default function BuyClient() {
 
         {/* Acciones */}
         <div className="flex flex-col gap-4 items-center">
-          <PayButton orderId={order.id} onClick={()=>{handleAddress()}}/>
+          <PayButton orderId={order.id} onClick={()=>handleAddress()} disabled={!(!!selectedMidpoint || !!selectedAddress)} />
           <Button className="w-50" variant="primary" 
             onClick={() => {
               canceledOrder(orderId)
@@ -211,7 +213,7 @@ export default function BuyClient() {
             Cancelar Orden
           </Button>
           {message && !success && (<h1 className="text-red-500">{message}</h1>)}
-          {success && (<h1 className="text-black bg-secondary">{message} Redirigiendo...</h1>)}
+          {success && (<h1 className="bg-secondary">{message} Redirigiendo...</h1>)}
         </div>
 
       </div>

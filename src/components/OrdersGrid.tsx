@@ -72,7 +72,9 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                     <h1 className="font-bold">ID de la orden: {order.id}</h1>
                     <p>Total: ${order.total_amount}</p>
                     <p>Pago: {statusOrder[order.status]}</p>
-                    <p>Entrega: {statusDelivery[order.status_delivery]}</p>
+                    {order.status !== "canceled" && 
+                        <p>Entrega: {statusDelivery[order.status_delivery]}</p>
+                    }
                     {user?.role === "admin" && (
                         <p>Pedido realizado el {formatDate(order.created_at)}</p>
                     )}
@@ -98,23 +100,25 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                             </div>
                         ))}
                     </div>
-                   <div className="mt-4 space-y-3">
-                        <div
-                            key={order.address.id}
-                            className="flex items-center gap-4 border-b pb-2"
-                        >
-                            <div>
-                                <h1 className="font-saira text-xl font-bold">Direccion de Entrega</h1>
-                                <p className="">
-                                    {order.address.city},{order.address.state},{order.address.country}
-                                </p>    
-                                <p>{order.address.postal_code}</p>
-                                <p>{order.address.neighborhood}, {order.address.street}</p>
-                                <h1 className="font-saira font-bold text-xl">Nota de Entrega</h1>
-                                <p>{order.address.delivery_notes}</p>
+                    {order.status !== "canceled" && (
+                        <div className="mt-4 space-y-3">
+                            <div
+                                key={order.address?.id}
+                                className="flex items-center gap-4 border-b pb-2"
+                            >
+                                <div>
+                                    <h1 className="font-saira text-xl font-bold">Direccion de Entrega</h1>
+                                    <p className="">
+                                        {order.address?.city},{order.address?.state},{order.address?.country}
+                                    </p>    
+                                    <p>{order.address?.postal_code}</p>
+                                    <p>{order.address?.neighborhood}, {order.address?.street}</p>
+                                    <h1 className="font-saira font-bold text-xl">Nota de Entrega</h1>
+                                    <p>{order.address?.delivery_notes}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     {user?.role === "admin" && (
                         <Button variant="link" onClick={() => changeStatus(order.id)}>Cambiar Estatus de entrega</Button>
                     )}

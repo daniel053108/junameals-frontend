@@ -33,11 +33,27 @@ export default function MePage() {
                     <p className="font-bold text-center">Direcciones</p>
                     {!idDefaultAddress && (
                         <div className={configDivUserData}>
-                           <h1 className={`${configUserData} text-center`} >No hay Direccion Principal Registrada</h1>
-                           <p>Es necesario tener una direccion principal para realizar una compra</p>
+                           {//DESCOMENTAR PARA DIRECCIONES
+                           //<h1 className={`${configUserData} text-center`} >No hay Direccion Principal Registrada</h1>
+                           //<p>Es necesario tener una direccion principal para realizar una compra</p>
+                           }
+                           <p>Lo sentimos!! aun no esta disponible el envio a domicilio:c</p>{/*ELIMINAR ESTO*/}
                         </div>
                     )}
                     {addresses.map((address) => {
+                        if(user?.role === "admin")
+                            return(
+                                <div key={address.id} className={configDivUserData}>
+                                    <p className="font-saira font-bold text-center text-xl bg-gray-400 rounded-xl">{address.is_midpoint ? "Punto Medio" : "Direccion"}</p>
+                                    <h1 className={configH1Address} >Calle: {address.street}</h1>
+                                    <h1 className={configH1Address} >Colonia: {address.neighborhood}</h1>
+                                    <h1 className={configH1Address} >Ciudad: {address.city}</h1>
+                                    <h1 className={configH1Address} >Estado: {address.state}</h1>
+                                    <h1 className={configH1Address} >codigo Postal: {address.postal_code}</h1>
+                                    <h1 className={configH1Address} >Pais: {address.country}</h1>
+                                    <h1 className={configH1Address} >Notas de entrega: {address.delivery_notes}</h1>
+                                </div>
+                            )
                         if(address.is_default){
                             return(
                                 <div key={address.id} className={configDivUserData}>

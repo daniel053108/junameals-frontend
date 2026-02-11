@@ -5,21 +5,32 @@ import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { FaShoppingCart, FaBars, FaTimes, FaUser, FaHome } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi"
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import ConfirmModal from "../ui/acceptModal";
 
 export default function Header() {
     const [open, setOpen] = useState(false);
     const [mobileMenu, setMobileMenu] = useState(false);
     const { isLogged, loading, logout } = useAuth();
     const router = useRouter();
+    const pathname = usePathname();
+    const inBuy = pathname === "/payment/buy";
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     if (loading) return null;
-
     return (
         <header className="flex items-center justify-between w-full border-b-3 border-black p-4 bg-secondary z-50">
             
             {/* Logo */}
-            <a href="/" className="rounded-3xl hover:scale-105 transition-all">
+            <a 
+                onClick={() => {
+                    if(inBuy){
+                        setShowConfirmModal(true);
+                        return;
+                    }
+                    router.push("/");
+                }} 
+                className="rounded-3xl hover:scale-105 transition-all">
                 <Image
                     className="rounded-3xl shadow-lg"
                     src="/images/Logos/logoJuna.JPG"
@@ -31,10 +42,31 @@ export default function Header() {
 
             {/* Menú Desktop */}
             <nav className="hidden md:flex bg-gray-300 rounded-xl shadow-lg text-xl items-center hover:bg-gray-800 hover:text-white ">
-                <Button href="/" variant="link" className="hover:scale-120"><FaHome/></Button>
+                <Button onClick={() => {
+                        if(inBuy){
+                            setShowConfirmModal(true);
+                            return;
+                        }
+                        router.push("/")
+                    }} 
+                    variant="link" 
+                    className="hover:scale-120"                 >
+                    <FaHome/>
+                </Button>
 
                 <div className="relative">
-                    <Button variant="link" onClick={() => setOpen(!open)}>Productos</Button>
+                    <Button 
+                        variant="link" 
+                        onClick={() => {
+                            if(inBuy){
+                                setShowConfirmModal(true)
+                                return;
+                            }
+                            setOpen(!open)
+                        }} 
+                    >
+                        Productos
+                    </Button>
                     {open && (
                         <div className="absolute top-full left-0 bg-gray-800 rounded-b-xl z-50 shadow-xl">
                             <Button href="/products/bowls" variant="popover" onClick={() => setOpen(false)}>Bowls</Button>
@@ -47,14 +79,40 @@ export default function Header() {
 
                 {isLogged && (
                     <>
-                        <Button variant="link" href="/user/me" className="hover:scale-120"><FaUser/></Button>
-                        <Button variant="link" href="/user/orders">Mis pedidos</Button>
+                        <Button 
+                            variant="link" 
+                            className="hover:scale-120" 
+                            onClick={() => {
+                                if(inBuy){
+                                    setShowConfirmModal(true)
+                                    return;
+                                }
+                                router.push("/user/me");
+                            }}
+                            >
+                                <FaUser/>
+                            </Button>
+                        <Button 
+                            variant="link" 
+                            onClick={() => {
+                                if(inBuy){
+                                    setShowConfirmModal(true)
+                                    return;
+                                }
+                                router.push("/user/orders");
+                            }}
+                        >
+                            Mis pedidos
+                        </Button>
                         <Button
                             className="hover:scale-120 text-2xl"
                             variant="link"
                             onClick={() => {
+                                if(inBuy){
+                                    setShowConfirmModal(true)
+                                    return;
+                                }
                                 logout();
-                                router.push("/");
                             }}
                         >
                             <FiLogOut/>
@@ -64,7 +122,17 @@ export default function Header() {
             </nav>
 
             {/* Carrito */}
-            <Button variant="link" href="/user/cart" className="hidden md:flex text-3xl" onClick={()=>setOpen(false)}>
+            <Button 
+                variant="link" 
+                className="hidden md:flex text-3xl" 
+                onClick={()=>{
+                    if(inBuy){
+                        setShowConfirmModal(true)
+                        return;
+                    }
+                    setOpen(false)
+                    router.push("/user/cart");
+                }}>
                 <FaShoppingCart />
             </Button>
 
@@ -72,7 +140,13 @@ export default function Header() {
             <Button
                 variant="link"
                 className="md:hidden text-3xl"
-                onClick={() => setMobileMenu(!mobileMenu)}
+                onClick={() => {
+                    if(inBuy){
+                        setShowConfirmModal(true)
+                        return;
+                    }
+                    setMobileMenu(!mobileMenu)
+                }}
             >
                 {mobileMenu ? <FaTimes /> : <FaBars />}
             </Button>
@@ -80,9 +154,9 @@ export default function Header() {
             {/* Menú móvil */}
             {mobileMenu && (
                 <div className="absolute top-24 right-0 w-50 bg-secondary rounded-xl flex flex-col items-center z-50 gap-4 py-6  md:hidden shadow-xl">
-                    <Button href="/" className="hover:scale-120" variant="link" onClick={() => setMobileMenu(false)}><FaHome/></Button>
-                    <Button href="/products/bowls" variant="link" onClick={() => setMobileMenu(false)}>Bowls</Button>
-                    <Button href="/products/weekly-menu" variant="link" onClick={() => setMobileMenu(false)}>Menú Semanal</Button>
+                    <Button href="/" className="hover:scale-120" variant="link" onClick={() => setMobileMenu(false)} disabled={inBuy}><FaHome/></Button>
+                    <Button href="/products/bowls" variant="link" onClick={() => setMobileMenu(false)} disabled={inBuy}>Bowls</Button>
+                    <Button href="/products/weekly-menu" variant="link" onClick={() => setMobileMenu(false)} disabled={inBuy}>Menú Semanal</Button>
 
                     {!isLogged && (
                         <Button href="/login" variant="link" onClick={() => setMobileMenu(false)}>
@@ -92,8 +166,8 @@ export default function Header() {
 
                     {isLogged && (
                         <>
-                            <Button href="/user/me" variant="link" onClick={() => setMobileMenu(false)} className="hover:scale-120"><FaUser/></Button>
-                            <Button href="/user/orders" variant="link" onClick={() => setMobileMenu(false)}>Mis pedidos</Button>
+                            <Button href="/user/me" variant="link" onClick={() => setMobileMenu(false)} className="hover:scale-120" disabled={inBuy}><FaUser/></Button>
+                            <Button href="/user/orders" variant="link" onClick={() => setMobileMenu(false)} disabled={inBuy}>Mis pedidos</Button>
                             <Button
                                 variant="link"
                                 onClick={() => {
@@ -102,17 +176,24 @@ export default function Header() {
                                     
                                     router.push("/");
                                 }}
+                                disabled={inBuy}
                             >
                                 <FiLogOut/>
                             </Button>
                         </>
                     )}
 
-                    <Button href="/user/cart" variant="link" onClick={() => setMobileMenu(false)}>
+                    <Button href="/user/cart" variant="link" onClick={() => setMobileMenu(false)} disabled={inBuy}>
                         <FaShoppingCart />
                     </Button>
                 </div>
             )}
+
+            <ConfirmModal 
+                open={showConfirmModal}
+                onAccept={() => setShowConfirmModal(false)}
+                message="Necesitas cancelar o pagar la orden para poder cambiar de pagina"
+            />
         </header>
     );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Variant = "primary" | "secondary" | "outline" | "link" | "popover" | "none";
 
@@ -28,6 +29,8 @@ export default function  Button({
     font-semibold
     transition-all
   `;
+  
+  const router = useRouter();
 
   const variants = {
     primary: `
@@ -71,23 +74,27 @@ export default function  Button({
   if (href) {
     if(className){
       return(
-        <Link
-          href={href}
+        <button
           className={`${baseStyles} ${variants[variant]} ${className} `}
-          onClick={onClick}
+          onClick={() => {
+            onClick?.()
+            router.push(href);
+          }}
         >
         {children}
-        </Link>  
+        </button>  
       )
     }
     return (
-      <Link
-        href={href}
+      <button
         className={`${baseStyles} ${variants[variant]}`}
-        onClick={onClick}
+        onClick={() => {
+          onClick?.()
+          router.push(href);
+        }}
       >
         {children}
-      </Link>
+      </button>
     );
   }
 

@@ -33,6 +33,7 @@ export default function ProductsGrid({ products }: { products: product[] }) {
     const router = useRouter();
     const [buyingProductId, setBuyingProductId] = useState<number | null>(null);
     const [openProductId, setOpenProductId] = useState<number | null>(null);
+    const [ showMessage, setShowMessage ] = useState(false);
 
 
     const handleAccept = () => {
@@ -172,11 +173,16 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                                     className="py-2 scale-80"
                                     variant="primary"
                                     onClick={() => {
+                                        if(user?.role === "admin"){
+                                            setShowMessage(true);
+                                            return;
+                                        }
+                                        /*DESCOMENTAR PARA DIRECCIONES
                                         if (addresses.length === 0) {
                                             setOpenProductId(product.id);
                                             return;
-                                        }
-
+                                        }*/
+                                        
                                         setBuyingProductId(product.id);
                                         setMessageBuyButton("Creando orden de compra...");
                                         createOrder([product]);
@@ -188,8 +194,8 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                                 </Button>
                                 <ConfirmModal
                                     open={openProductId === product.id}
-                                    message="Necesitas registrar mínimo una dirección de entrega para poder continuar con la compra. Al aceptar seras redirigido a la seccion para registrar una direccion."
-                                    onAccept={handleAccept}
+                                    message={"Necesitas registrar mínimo una dirección de entrega para poder continuar con la compra. Al aceptar seras redirigido a la seccion para registrar una direccion."}
+                                    onAccept={() => handleAccept}
                                     onClose={() => setOpenProductId(null)}
                                 />
                             </div>
@@ -219,6 +225,11 @@ export default function ProductsGrid({ products }: { products: product[] }) {
                     <Button href="/products/modifiqued-products/add-product" className="mt-4">Agregar Producto</Button>
                 </div>
             )}
+            <ConfirmModal
+                open={showMessage}
+                message={"No puedes comprar siendo administrador"}
+                onAccept={() => setShowMessage(false)}
+            />
         </section>
     );
 }

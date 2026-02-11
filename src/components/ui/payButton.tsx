@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 type Props = {
     orderId: number;
     onClick?: () => void;
+    disabled?: boolean;
 };
 
-export default function PayButton({ orderId, onClick }: Props) {
+export default function PayButton({ orderId, onClick, disabled }: Props) {
     const { createPayment, loading, error } = useCreatePayment(orderId);
     const { addresses } = useAuth();
     const router = useRouter();
@@ -17,14 +18,16 @@ export default function PayButton({ orderId, onClick }: Props) {
         <div className="flex flex-col gap-2 mt-4">
             <button
                 onClick={() => {
-                    onClick
+                    onClick?.()
+                    /*DESCOMENTAR PARA DIRECCION
                     if(addresses.length === 0){
                         router.push("/user/update-user");
                         return;
                     }
+                    */
                     createPayment()
                 }}
-                disabled={loading}
+                disabled={loading || disabled}
                 className="bg-green-600 text-white px-6 py-3 rounded-xl
                            hover:bg-green-400 disabled:opacity-50"
             >

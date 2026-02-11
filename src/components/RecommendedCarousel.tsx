@@ -11,8 +11,14 @@ export default function RecommendedCarousel(){
 
     useEffect(() => {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/recommended`)
-        .then((res) => res.json())
-        .then((data) => setProducts(data))
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+            if(!data){
+                setProducts([]);
+                return;
+            }
+            setProducts(data)
+        })
         .catch((err) => console.log(err));
     }, []);
 
@@ -37,7 +43,7 @@ export default function RecommendedCarousel(){
 
             <div ref = {carouselRef} 
                 className="flex gap-4 overflow-x-auto scroll-smooth px-10 h-60">
-                {!products ? (<h1>Ups, al parecer no hay recomendados para hoy</h1>) :
+                {products.length === 0 ? (<h1>Ups, al parecer no hay recomendados para hoy</h1>) :
                 products?.map((product:product) => {
                     if(!product.available || !product.recommended) return;
                     return(

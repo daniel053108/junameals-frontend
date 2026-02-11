@@ -26,6 +26,9 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
     const [ orderModifiqued, setOrderModifiqued] = useState(false);
     const [updatingOrderId, setUpdatingOrderId] = useState<number | null>(null);
 
+    const approved = "bg-green-200";
+    const rejected = "bg-red-300";
+
     useEffect(() => {
         let url = orderId !== 0
             ? `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}`
@@ -82,7 +85,7 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
             {orders.map((order) => {
                 if((order.status === "canceled" || order.status_delivery === "delivered")&& user?.role === "admin")return null;
                 return(
-                <div key={order.id} className="border p-4 rounded-xl font-saira">
+                <div key={order.id} className={`border p-4 rounded-xl font-saira`}>
                     <h1 className="font-bold">ID de la orden: {order.id}</h1>
                     {user?.role === "admin" &&(
                         <>
@@ -92,7 +95,7 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                         </>
                     )}
                     <p>Total: ${order.total_amount}</p>
-                    <p>Estatus de Pago: {statusOrder[order.status]}</p>
+                    <p className={`${order.status === "paid" ? approved : rejected} rounded-xl px-3 shadow-lg`}>Estatus de Pago: {statusOrder[order.status]}</p>
                     {(order.status !== "canceled" && order.status !== "failed" && order.status !== "rejected")  && 
                         <p>Estatus de Entrega: {statusDelivery[order.status_delivery]}</p>
                     }

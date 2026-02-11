@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Address } from "@/context/authContext";
+import {User} from "@/context/authContext";
 
 export type OrderStatus = "paid" | "rejected" | "pending" | "unknown" | "canceled" | "failed";
 export type OrderStatusDelivery = "delivered" | "pending" | "unknown" | "arriving";
+
 
 export type OrderItem = {
     id: number;
@@ -16,6 +18,7 @@ export type OrderItem = {
 
 export type Order = {
     id:number;
+    user: User;
     status: OrderStatus;
     status_delivery: OrderStatusDelivery;
     total_amount: number;

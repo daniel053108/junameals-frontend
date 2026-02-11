@@ -24,6 +24,7 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
     const [orders, setOrders] = useState<Order[]>([]);
     const {user, isLogged} = useAuth();
     const [ orderModifiqued, setOrderModifiqued] = useState(false);
+    const [updatingOrderId, setUpdatingOrderId] = useState<number | null>(null);
 
     useEffect(() => {
         let url = orderId !== 0
@@ -44,21 +45,32 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
 
     }, [orderId, isLogged, orderModifiqued]);
 
-    const changeStatus = (orderId:number) => {
-        fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/orders/updateStatusOrder/${orderId}`,{
-                credentials: "include",
-                method: "PUT"
-            }
-        )
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-            if(!data) return;
+    const changeStatus = async (orderId: number) => {
+        if (updatingOrderId !== null) return;
 
-            setOrderModifiqued(true);
-        })
-        .catch(error => console.error(error));
-    }
+        setUpdatingOrderId(orderId);
+
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/orders/updateStatusOrder/${orderId}`,
+                {
+                    credentials: "include",
+                    method: "PUT"
+                }
+            );
+
+            const data = res.ok ? await res.json() : null;
+
+            if (data) {
+                setOrderModifiqued(true);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setUpdatingOrderId(null);
+        }
+    };
+
 
     return (
         <section className="space-y-6">
@@ -67,13 +79,22 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                 Tus Pedidos    
                 </p>
             </div>
-            {orders.map(order => (
+            {orders.map((order) => {
+                if((order.status === "canceled" || order.status_delivery === "delivered")&& user?.role === "admin")return null;
+                return(
                 <div key={order.id} className="border p-4 rounded-xl font-saira">
                     <h1 className="font-bold">ID de la orden: {order.id}</h1>
+                    {user?.role === "admin" &&(
+                        <>
+                            <h1>Usuario: {order.user?.name}</h1>
+                            <h1>Correo: {order.user?.email}</h1>
+                            <h1>Numero Celular: {order.user?.phone_number}</h1>
+                        </>
+                    )}
                     <p>Total: ${order.total_amount}</p>
-                    <p>Pago: {statusOrder[order.status]}</p>
+                    <p>Estatus de Pago: {statusOrder[order.status]}</p>
                     {order.status !== "canceled" && 
-                        <p>Entrega: {statusDelivery[order.status_delivery]}</p>
+                        <p>Estatus de Entrega: {statusDelivery[order.status_delivery]}</p>
                     }
                     {user?.role === "admin" && (
                         <p>Pedido realizado el {formatDate(order.created_at)}</p>
@@ -120,10 +141,18 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                         </div>
                     )}
                     {user?.role === "admin" && (
-                        <Button variant="link" onClick={() => changeStatus(order.id)}>Cambiar Estatus de entrega</Button>
+                        <Button 
+                            variant="link" 
+                            disabled={updatingOrderId === order.id}
+                            onClick={() => changeStatus(order.id)}
+                        >
+                            {updatingOrderId === order.id
+                                ? "Actualizando..."
+                                : "Cambiar estatus de entrega"}
+                        </Button>
                     )}
                 </div>
-            ))}
+            )})}
         </section>
     );
 }

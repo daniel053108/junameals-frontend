@@ -22,7 +22,7 @@ export default function PendingClient() {
             {loading && <span>Consultando estado...</span>}
 
             <div className="mt-4">
-                <span className="animate-pulse text-yellow-500">
+                <span className="animate-pulse bg-secondary rounded-xl">
                     Estado actual: {order?.status}
                 </span>
             </div>

@@ -93,7 +93,7 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                     )}
                     <p>Total: ${order.total_amount}</p>
                     <p>Estatus de Pago: {statusOrder[order.status]}</p>
-                    {order.status !== "canceled" && 
+                    {(order.status !== "canceled" && order.status !== "failed" && order.status !== "rejected")  && 
                         <p>Estatus de Entrega: {statusDelivery[order.status_delivery]}</p>
                     }
                     {user?.role === "admin" && (
@@ -121,7 +121,7 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                             </div>
                         ))}
                     </div>
-                    {order.status !== "canceled" && (
+                    {(order.status !== "canceled" && order.status !== "failed" && order.status !== "rejected") && (
                         <div className="mt-4 space-y-3">
                             <div
                                 key={order.address?.id}

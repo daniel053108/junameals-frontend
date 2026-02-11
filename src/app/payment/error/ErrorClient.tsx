@@ -1,17 +1,22 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import useCreateOrder from "@/components/hooks/useCreateOrder";
 import Button from "@/components/ui/Button";
 
 export default function PagoErrorPage() {
     const router = useRouter();
     const search = useSearchParams();
+    const { canceledOrder } = useCreateOrder();
+
     const orderId = Number(search.get("orderId"));
 
-    const { canceledOrder } = useCreateOrder();
-    
-    canceledOrder(orderId);
+    useEffect(() => {
+        if (!orderId) return;
+
+        canceledOrder(orderId);
+    }, [orderId]);
 
     return (
         <section className="flex flex-col items-center justify-center h-screen gap-4">

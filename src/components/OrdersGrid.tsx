@@ -86,7 +86,7 @@ export default function OrderGrid({ orderId }: { orderId: number | null }) {
                 if((order.status === "canceled" || order.status_delivery === "delivered")&& user?.role === "admin")return null;
                 return(
                 <div key={order.id} className={`border p-4 rounded-xl font-saira`}>
-                    <h1 className="font-bold">ID de la orden: {order.id}</h1>
+                    <h1 className="font-bold">ID del pedido: {order.id}</h1>
                     {user?.role === "admin" &&(
                         <>
                             <h1>Usuario: {order.user?.name}</h1>

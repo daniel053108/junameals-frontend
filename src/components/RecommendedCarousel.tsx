@@ -30,20 +30,29 @@ export default function RecommendedCarousel(){
         });
     }
 
+    const designCarrousel = products.length !== 0 ? "flex gap-4 overflow-x-auto scroll-smooth px-10 h-60" : " ";
+
     return(
         <section className="relative w-full bg-secondary p-3 ">
             <h1 className="font-playfair text-white  text-3xl italic text-center mb-4 bg-gray-400 rounded-xl">Recomendaciones de Hoy</h1>
-            <button 
-                className="absolute left-0 top-1/2 bg-primary rounded-3xl w-6 h-10 text-white
-                            hover:bg-green-700 hover:scale-105 hover:text-xl " 
-                onClick={() => scroll("left")}
-            >
-                <FaChevronLeft/>
-            </button>
-
+            {products.length !== 0 && (
+                <button 
+                    className="absolute left-0 top-1/2 bg-primary rounded-3xl w-6 h-10 text-white
+                                hover:bg-green-700 hover:scale-105 hover:text-xl " 
+                    onClick={() => scroll("left")}
+                >
+                    <FaChevronLeft/>
+                </button>
+            )}
             <div ref = {carouselRef} 
-                className="flex gap-4 overflow-x-auto scroll-smooth px-10 h-60">
-                {products.length === 0 ? (<h1>Ups, al parecer no hay recomendados para hoy</h1>) :
+                className={`${designCarrousel}`}>
+                {products.length === 0 ? (
+                    <h1 
+                        className="font-saira bg-gray-500 shadow-xl rounded-xl text-white text-center text-3xl h-15"
+                    >
+                        Ups, al parecer no hay recomendados
+                    </h1>
+                ) :
                 products?.map((product:product) => {
                     if(!product.available || !product.recommended) return;
                     return(
@@ -57,13 +66,15 @@ export default function RecommendedCarousel(){
                     
                 )})}
             </div>
-            <button 
-                className="absolute right-0 top-1/2 bg-primary rounded-3xl w-6 h-10 text-white
-                            hover:bg-green-700 hover:scale-105 hover:text-xl"
-                onClick={() => scroll("right")} 
-            >
-                <FaChevronRight/>
-            </button>
+            {products.length !== 0 && (
+                <button 
+                    className="absolute right-0 top-1/2 bg-primary rounded-3xl w-6 h-10 text-white
+                                hover:bg-green-700 hover:scale-105 hover:text-xl"
+                    onClick={() => scroll("right")} 
+                >
+                    <FaChevronRight/>
+                </button>
+            )}
         </section>
     );
 } 

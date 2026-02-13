@@ -66,7 +66,7 @@ export default function LoginPage() {
                 <p className="font-playfair scale-160 font-bold">Iniciar Sesion</p>
 
                 <input
-                    className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                    className="w-80 text-lg px-4 py-2 shadow-lg rounded-xl hover:scale-105 focus:scale-105 transition"
                     type="text"
                     name="user_email"
                     value={form.user_email}
@@ -76,9 +76,9 @@ export default function LoginPage() {
                 />
 
                 {/* PASSWORD CON OJITO */}
-                <div className="flex flex-row">
+                <div className="relative flex flex-row">
                     <input
-                        className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        className="w-80 text-lg px-4 hover:scale-105 py-2 shadow-lg rounded-xl focus:scale-105 transition"
                         type={showPassword ? "text" : "password"}
                         name="password"
                         value={form.password}
@@ -90,7 +90,7 @@ export default function LoginPage() {
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="text-2xl z-50"
+                        className="absolute hover:scale-120 top-2 right-4 text-2xl transition z-50"
                     >
                         {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>

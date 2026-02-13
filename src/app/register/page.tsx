@@ -54,7 +54,7 @@ export default function RegisterPage() {
     };
 
     return (
-        <section className="h-160">
+        <section className="h-170">
             <form
                 onSubmit={handleSubmit}
                 className="flex flex-col items-center h-140 w-full p-10"
@@ -65,7 +65,7 @@ export default function RegisterPage() {
                     </p>
 
                     <input
-                        className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        className="w-80 text-lg px-4 hover:scale-105 py-2 shadow-lg rounded-xl focus:scale-105 transition"
                         type="text"
                         name="user_name"
                         value={form.user_name}
@@ -75,7 +75,7 @@ export default function RegisterPage() {
                     />
 
                     <input
-                        className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        className="w-80 text-lg px-4 hover:scale-105 py-2 shadow-lg rounded-xl focus:scale-105 transition"
                         type="email"
                         name="email"
                         value={form.email}
@@ -86,7 +86,7 @@ export default function RegisterPage() {
 
                     {/* PHONE NUMBER */}
                     <input
-                        className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                        className="w-80 text-lg px-4 hover:scale-105 py-2 shadow-lg rounded-xl focus:scale-105 transition"
                         type="tel"
                         name="phone_number"
                         value={form.phone_number}
@@ -96,9 +96,9 @@ export default function RegisterPage() {
                     />
 
                     {/* PASSWORD CON OJITO */}
-                    <div className="flex flex-row items-center gap-2">
+                    <div className="relative flex flex-row">
                         <input
-                            className="scale-150 shadow-lg rounded-xl hover:scale-160 p-1 transition-all"
+                            className="w-80 text-lg px-4 hover:scale-105 py-2 shadow-lg rounded-xl focus:scale-105 transition"
                             type={showPassword ? "text" : "password"}
                             name="password"
                             value={form.password}
@@ -110,7 +110,7 @@ export default function RegisterPage() {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="z-50 text-2xl"
+                            className="absolute hover:scale-120 top-2 right-4 text-2xl transition z-50"
                         >
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
